@@ -19,26 +19,21 @@ class Water extends GLResource {
     private _springStiffness: number;
     private _dispersion: number;
 
+    public rain: boolean;
+    
     constructor(gl: WebGLRenderingContext, w: number, h: number) {
         super(gl);
 
-        this._width = w;
-        this._height = h;
-        this._FBO = new FBO(gl, w, h);
+        this.rain = true;
 
-        this._touchShader = ShaderBuilder.buildTouchShader(gl);
-        this._updateShader = ShaderBuilder.buildUpdateShader(gl);
-        this._updateShader.u["uTexelSize"].value = [1 / w, 1 / h];
-
-        this.surfaceTension = 3.0;
-        this.springStiffness = 0.2;
-        this.dispersion = 0.997;
-
-        this.reset();
+        this.reset(w, h);
     }
 
     public freeGLResources(): void {
-        this._FBO.freeGLResources();
+        if (this._FBO) {
+            this._FBO.freeGLResources();
+        }
+
         this.freeTextures();
         this.freeShaders();
     }
@@ -53,11 +48,20 @@ class Water extends GLResource {
     }
 
     private freeShaders(): void {
-        this._touchShader.freeGLResources();
-        this._updateShader.freeGLResources();
+        if (this._touchShader) {
+            this._touchShader.freeGLResources();
+        }
+
+        if (this._updateShader) {
+            this._updateShader.freeGLResources();
+        }
     }
 
     public update(dt: number): void {
+        if (this.rain && Math.random() < 0.02) {
+            this.touch(Math.random()  * this.width, Math.random() * this.height, 8);
+        }
+
         const gl = this.gl; //shortcut
         const updateShader = this._updateShader;
 
@@ -135,17 +139,27 @@ class Water extends GLResource {
         this._currIndex = (this._currIndex + 1) % 2;
     }
 
-    public reset(): void {
-        this.freeTextures();
+    public reset(w: number, h: number): void {
+        this.freeGLResources();
 
         const gl = super.gl; //shortcut
-        const w: number = this._width;
-        const h: number = this._height;
+
+        this._width = w;
+        this._height = h;
+        this._FBO = new FBO(gl, w, h);
+
+        this._touchShader = ShaderBuilder.buildTouchShader(gl);
+        this._updateShader = ShaderBuilder.buildUpdateShader(gl);
+        this._updateShader.u["uTexelSize"].value = [1 / w, 1 / h];
+
+        this.surfaceTension = 3.0;
+        this.springStiffness = 0.2;
+        this.dispersion = 0.997;
 
         const uintTexels: number[] = new Array(4 * w * h).fill(127);
         const uintData = new Uint8Array(uintTexels);
 
-        this._heightmapsTex = [];
+        let textures: WebGLTexture[] = [];
         for (let i = 0; i < 2; ++i) {
             let texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -156,9 +170,10 @@ class Water extends GLResource {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-            this._heightmapsTex.push(texture);
+            textures.push(texture);
         }
 
+        this._heightmapsTex = textures;
         this._currIndex = 0;
     }
 }

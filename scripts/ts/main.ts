@@ -3,6 +3,7 @@ import FBO from "./gl-utils/fbo";
 import Water from "./water";
 import Viewer from "./viewer/viewer";
 import Viewer2D from "./viewer/viewer2D";
+import * as Controls from "./controls";
 
 /** Initializes a WebGL context */
 function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
@@ -38,8 +39,9 @@ function main() {
 
     const side = 512;
     const water: Water = new Water(gl, side, side);
-    water.touch(0.3 * side, 0.4 * side, 0.05 * side);
     const viewer2D: Viewer2D = new Viewer2D(gl);
+
+    Controls.bind(canvas, water);
 
     let viewer: Viewer = viewer2D;
 
