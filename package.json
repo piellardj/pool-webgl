@@ -1,0 +1,25 @@
+{
+  "name": "navier-stokes-webgl",
+  "version": "1.0.0",
+  "description": "Water simulation running on GPU",
+  "main": "main.js",
+  "scripts": {
+    "ts-transpile": "tsc --project tsconfig.json",
+    "ts-watch": "tsc --watch --project tsconfig.json",
+    "js-build": "webpack --config webpack.config.js",
+    "js-watch": "webpack --watch --config webpack.config.js",
+    "watch-all": "npm run ts-watch & npm run js-watch",
+    "build-all": "npm run clean; npm run ts-transpile; npm run js-build",
+    "clean": "cp scripts/js/ui-min.js -t scripts/; rm -rf scripts/js/* tmp/; mv scripts/ui-min.js -t scripts/js/"
+  },
+  "keywords": [],
+  "author": "Jérémie Piellard",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "typescript": "^2.6.2",
+    "webpack": "^3.10.0"
+  }
+}
