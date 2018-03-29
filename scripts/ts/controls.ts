@@ -100,38 +100,6 @@ function bindMouse(canvas: HTMLCanvasElement): void {
     mouse = new Mouse(canvas);
 }
 
-interface BrushInfo {
-    radius: number,
-    strength: number,
-}
-const brushInfo: BrushInfo = {
-    radius: 10,
-    strength: 100,
-}
-
-interface FluidInfo {
-    stream: boolean;
-}
-const fluidInfo: FluidInfo = {
-    stream: true,
-}
-
-type ObstaclesInfo = "none" | "one" | "many";
-let obstaclesInfo: ObstaclesInfo = "none";
-
-interface DisplayInfo {
-    velocity: boolean,
-    pressure: boolean,
-    brush: boolean,
-    obstacles: boolean,
-}
-const displayInfo: DisplayInfo = {
-    velocity: true,
-    pressure: true,
-    brush: true,
-    obstacles: true,
-}
-
 function bindControls(water: Water): void {
     function bindInput(element: HTMLElement, func, input: string) {
         element.addEventListener(input, func, false);
@@ -179,7 +147,7 @@ function bindControls(water: Water): void {
 
 function bind(canvas: HTMLCanvasElement, water: Water): void {
     bindControls(water);
-    //bindMouse(canvas);
+    bindMouse(canvas);
 }
 
-export { bind };
+export { mouse, bind };

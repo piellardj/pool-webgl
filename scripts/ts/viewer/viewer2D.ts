@@ -2,6 +2,7 @@ import Viewer from "./viewer";
 import Water from "../water";
 import Shader from "../gl-utils/shader";
 import * as ShadersBuilder from "./viewer2D-shaders";
+import { mouse } from "../controls";
 
 class Viewer2D extends Viewer {
     private _displayShader: Shader;
@@ -24,6 +25,12 @@ class Viewer2D extends Viewer {
         this._displayShader.bindUniformsAndAttributes();
 
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    public interact(water: Water): void {
+        if (mouse.pressed) {
+            water.touch(mouse.pos[0]  * water.width, mouse.pos[1] * water.height, 8);
+        }
     }
 }
 

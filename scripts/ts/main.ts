@@ -65,6 +65,7 @@ function main() {
         dt = Math.min(dt, 1 / 10);
 
         /* Updating */
+        viewer.interact(water);
         water.update(dt);
 
         /* Drawing */

@@ -22,7 +22,7 @@ varying vec2 sampleCoords;
 ___ENCODE_DECODE___
 
 void main(void) {
-    float h = decodeHeight(texture2D(uWater, sampleCoords)) * 10.0;
+    float h = decodeHeight(texture2D(uWater, sampleCoords));// * 10.0;
 
     gl_FragColor = vec4(vec3(h*0.5+0.5), 1);
 }`;
