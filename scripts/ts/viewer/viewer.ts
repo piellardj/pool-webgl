@@ -10,6 +10,8 @@ abstract class Viewer extends GLResource {
     }
 
     public abstract display(water: Water): void;
+
+    public abstract interact(water: Water): void;
 }
 
 export default Viewer;

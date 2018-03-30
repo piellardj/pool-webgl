@@ -1,4 +1,5 @@
 import Water from "./water";
+import Viewer2D from "./viewer/viewer2D";
 
 class Mouse {
     private elt: HTMLElement;
@@ -100,7 +101,7 @@ function bindMouse(canvas: HTMLCanvasElement): void {
     mouse = new Mouse(canvas);
 }
 
-function bindControls(water: Water): void {
+function bindControls(water: Water, viewer2D: Viewer2D): void {
     function bindInput(element: HTMLElement, func, input: string) {
         element.addEventListener(input, func, false);
         func();
@@ -143,10 +144,36 @@ function bindControls(water: Water): void {
         const updateDispersion = () => { water.dispersion = +dispersionSlider.value; };
         bindInput(dispersionSlider, updateDispersion, "input");
     }
+
+    {
+        const specularCheckbox: HTMLInputElement = document.getElementById("specular-checkbox") as HTMLInputElement;
+        const updateSpecular = () => { viewer2D.specular = specularCheckbox.checked; };
+        bindInput(specularCheckbox, updateSpecular, "change");
+    }
+    {
+        const amplitudeSlider: HTMLInputElement = document.getElementById("amplitude-slider") as HTMLInputElement;
+        const updateAmplitude = () => { viewer2D.amplitude = +amplitudeSlider.value; };
+        bindInput(amplitudeSlider, updateAmplitude, "input");
+    }
+    {
+        const depthSlider: HTMLInputElement = document.getElementById("depth-slider") as HTMLInputElement;
+        const updateDepth = () => { viewer2D.depth = +depthSlider.value; };
+        bindInput(depthSlider, updateDepth, "input");
+    }
+    {
+        const opacitySlider: HTMLInputElement = document.getElementById("opacity-slider") as HTMLInputElement;
+        const updateOpacity = () => { viewer2D.opacity = +opacitySlider.value; };
+        bindInput(opacitySlider, updateOpacity, "input");
+    }
+    {
+        const etaSlider: HTMLInputElement = document.getElementById("refraction-slider") as HTMLInputElement;
+        const updateEta = () => { viewer2D.eta = +etaSlider.value; };
+        bindInput(etaSlider, updateEta, "input");
+    }
 }
 
-function bind(canvas: HTMLCanvasElement, water: Water): void {
-    bindControls(water);
+function bind(canvas: HTMLCanvasElement, water: Water, viewer2D: Viewer2D): void {
+    bindControls(water, viewer2D);
     bindMouse(canvas);
 }
 

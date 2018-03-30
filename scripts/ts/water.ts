@@ -24,6 +24,14 @@ class Water extends GLResource {
     constructor(gl: WebGLRenderingContext, w: number, h: number) {
         super(gl);
 
+        this._FBO = new FBO(gl, w, h);
+        this._touchShader = ShaderBuilder.buildTouchShader(gl);
+        this._updateShader = ShaderBuilder.buildUpdateShader(gl);
+
+        this.surfaceTension = 20.0;
+        this.springStiffness = 0.1;
+        this.dispersion = 0.995;
+
         this.rain = true;
 
         this.reset(w, h);
@@ -58,7 +66,7 @@ class Water extends GLResource {
     }
 
     public update(dt: number): void {
-        if (this.rain && Math.random() < 0.02) {
+        if (this.rain && Math.random() < 0.1) {
             this.touch(Math.random()  * this.width, Math.random() * this.height, 8);
         }
 
@@ -140,21 +148,16 @@ class Water extends GLResource {
     }
 
     public reset(w: number, h: number): void {
-        this.freeGLResources();
+        this.freeTextures();
 
         const gl = super.gl; //shortcut
 
         this._width = w;
         this._height = h;
-        this._FBO = new FBO(gl, w, h);
+        this._FBO.width = w;
+        this._FBO.height = h;
 
-        this._touchShader = ShaderBuilder.buildTouchShader(gl);
-        this._updateShader = ShaderBuilder.buildUpdateShader(gl);
         this._updateShader.u["uTexelSize"].value = [1 / w, 1 / h];
-
-        this.surfaceTension = 3.0;
-        this.springStiffness = 0.2;
-        this.dispersion = 0.997;
 
         const uintTexels: number[] = new Array(4 * w * h).fill(127);
         const uintData = new Uint8Array(uintTexels);

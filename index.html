@@ -56,23 +56,58 @@
             <section class="control">
               <label>Rain:</label>
               <div class="checkbox">
-                <input type="checkbox" id="rain-checkbox">
+                <input type="checkbox" checked id="rain-checkbox">
                 <label for="rain-checkbox" class="checkmark"></label>
               </div>
             </section>
             <section class="control">
               <label for="tension-slider">Surface tension:</label>
-              <input type="range" min="0.0" max="20" value="2" step="0.1" class="slider" id="tension-slider">
+              <input type="range" min="0.0" max="30" value="20" step="0.1" class="slider" id="tension-slider">
               <span class="tooltip"></span>
             </section>
             <section class="control">
               <label for="spring-slider">Spring stiffness:</label>
-              <input type="range" min="0" max="1" value="0.2" step="0.01" class="slider" id="spring-slider">
+              <input type="range" min="0" max="1" value="0.15" step="0.01" class="slider" id="spring-slider">
               <span class="tooltip"></span>
             </section>
             <section class="control">
               <label for="dispersion-slider">Dispersion:</label>
               <input type="range" min="0.9" max="1" value="0.997" step="0.001" class="slider" id="dispersion-slider">
+              <span class="tooltip"></span>
+            </section>
+          </section>
+        </section>
+
+        <hr/>
+
+        <section class="controls-block">
+          <h2>Rendering</h2>
+          <section class="block-content">
+            <section class="control">
+              <label>Specular:</label>
+              <div class="checkbox">
+                <input type="checkbox" checked id="specular-checkbox">
+                <label for="specular-checkbox" class="checkmark"></label>
+              </div>
+            </section>
+            <section class="control">
+              <label for="amplitude-slider">Amplitude:</label>
+              <input type="range" min="0" max="0.05" value="0.002" step="0.0005" class="slider" id="amplitude-slider">
+              <span class="tooltip"></span>
+            </section>
+            <section class="control">
+              <label for="depth-slider">Depth:</label>
+              <input type="range" min="0.01" max="5" value="1" step="0.01" class="slider" id="depth-slider">
+              <span class="tooltip"></span>
+            </section>
+            <section class="control">
+              <label for="opacity-slider">Opacity:</label>
+              <input type="range" min="0" max="1" value="0.2" step="0.01" class="slider" id="opacity-slider">
+              <span class="tooltip"></span>
+            </section>
+            <section class="control">
+              <label for="refraction-slider">Refraction:</label>
+              <input type="range" min="1" max="1.5" value="1.17" step="0.01" class="slider" id="refraction-slider">
               <span class="tooltip"></span>
             </section>
           </section>

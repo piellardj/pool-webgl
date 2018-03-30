@@ -19,7 +19,6 @@ function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
     }
 
     if (gl) {
-        canvas.style.cursor = "none";
         gl.disable(gl.CULL_FACE);
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.BLEND);
@@ -41,7 +40,7 @@ function main() {
     const water: Water = new Water(gl, side, side);
     const viewer2D: Viewer2D = new Viewer2D(gl);
 
-    Controls.bind(canvas, water);
+    Controls.bind(canvas, water, viewer2D);
 
     let viewer: Viewer = viewer2D;
 

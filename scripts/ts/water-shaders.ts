@@ -93,7 +93,7 @@ void main(void) {
 
     float dist = length((sampleCoords - uCoords) / uSize);
     dist = clamp(dist, 0.0, 1.0);
-    //dist = smoothstep(0.0, 1.0, dist);
+
     cell.h = mix(-0.5*HEIGHT_RANGE, cell.h, dist);
     cell.v *= step(1.0, dist);
 
@@ -127,8 +127,8 @@ void main(void) {
 
     /* Update velocity */
     cell.v += -uDt * uK * cell.h; //vertical spring
-    cell.v += uDt * uC * (neighbours - cell.h);
-    cell.v *= uF;
+    cell.v += uDt * uC * (neighbours - cell.h) * 4.0 / 5.0; //surface tension
+    cell.v *= uF; //attenuation
 
     /* Update position */
     cell.h += uDt * cell.v;
