@@ -17,11 +17,13 @@ const displayFrag: string =
 
 uniform sampler2D uWater;
 uniform sampler2D uTileTexture;
+uniform sampler2D uCausticsTexture;
 
 uniform vec2 uTileRepetition;
 uniform vec2 uTexelSize;
 
 uniform bool uSpecular;
+uniform bool uUseCaustics;
 uniform float uAmplitude;
 uniform float uDepth;
 uniform float uOpacity;
@@ -71,18 +73,22 @@ void main(void)
     ray = refract(ray, normal, uEta);
     vec3 toGround = uDepth * ray / ray.z;
 
-    vec3 groundColor = sampleTileTex(sampleCoords + toGround.xy).rgb;
+    vec2 groundCoords = sampleCoords + toGround.xy;
+    vec3 tileColor = sampleTileTex(groundCoords).rgb;
+    float caustics = texture2D(uCausticsTexture, groundCoords).r;
+
     vec3 waterColor = vec3(0.0, 0.2, 0.5);
 
     float opacity = uOpacity * length(toGround);
     opacity = clamp(opacity, 0.0, 1.0);
 
-    const vec3 fromLight = normalize(vec3(-1,-1,-20));
+    const vec3 fromLight = normalize(vec3(-.03,-.05,-1));
     float specular = computeSpecular(normal, fromLight);
 
-    vec3 finalColor = mix(groundColor, waterColor, opacity) +
+    vec3 bottomColor = tileColor + float(uUseCaustics) * caustics;
+    vec3 finalColor = mix(bottomColor, waterColor, opacity) +
                       vec3(specular) * float(uSpecular);
-    
+    //finalColor = 0.001* finalColor + texture2D(uCausticsTexture, sampleCoords).r;
     gl_FragColor = vec4(finalColor, 1.0);
 }`;
 

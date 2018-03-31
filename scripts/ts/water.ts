@@ -30,7 +30,7 @@ class Water extends GLResource {
 
         this.surfaceTension = 20.0;
         this.springStiffness = 0.1;
-        this.dispersion = 0.995;
+        this.dispersion = 0.999;
 
         this.rain = true;
 
@@ -162,16 +162,18 @@ class Water extends GLResource {
         const uintTexels: number[] = new Array(4 * w * h).fill(127);
         const uintData = new Uint8Array(uintTexels);
 
+        const wrap = gl.REPEAT;
+        const filter = gl.LINEAR;
         let textures: WebGLTexture[] = [];
         for (let i = 0; i < 2; ++i) {
             let texture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0,
                 gl.RGBA, gl.UNSIGNED_BYTE, uintData);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap);
 
             textures.push(texture);
         }

@@ -151,6 +151,11 @@ function bindControls(water: Water, viewer2D: Viewer2D): void {
         bindInput(specularCheckbox, updateSpecular, "change");
     }
     {
+        const causticsCheckbox: HTMLInputElement = document.getElementById("caustics-checkbox") as HTMLInputElement;
+        const updateCaustics = () => { viewer2D.caustics = causticsCheckbox.checked; };
+        bindInput(causticsCheckbox, updateCaustics, "change");
+    }
+    {
         const amplitudeSlider: HTMLInputElement = document.getElementById("amplitude-slider") as HTMLInputElement;
         const updateAmplitude = () => { viewer2D.amplitude = +amplitudeSlider.value; };
         bindInput(amplitudeSlider, updateAmplitude, "input");

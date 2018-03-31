@@ -3,7 +3,7 @@ import VBO from "./gl-utils/vbo";
 
 const encodeDecodeStr: string =
     `const float HEIGHT_RANGE = 1.0;
-const float VEL_RANGE = 1.0;
+const float VEL_RANGE = 0.25;
 
 struct Cell {
     float h; //height
@@ -127,7 +127,7 @@ void main(void) {
 
     /* Update velocity */
     cell.v += -uDt * uK * cell.h; //vertical spring
-    cell.v += uDt * uC * (neighbours - cell.h) * 4.0 / 5.0; //surface tension
+    cell.v += uDt * uC * (neighbours - cell.h); //surface tension
     cell.v *= uF; //attenuation
 
     /* Update position */
