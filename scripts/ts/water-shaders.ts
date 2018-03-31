@@ -136,6 +136,39 @@ void main(void) {
     gl_FragColor = encodeCell(cell);
 }`;
 
+const normalsFrag: string =
+    `precision mediump float;
+
+uniform sampler2D uWater;
+
+uniform vec2 uTexelSize;
+
+varying vec2 sampleCoords;
+
+___ENCODE_DECODE___
+
+vec3 computeNormal(vec2 coords)
+{
+    const float amplitude = 1.0;
+
+    float dZx = decodeHeight(texture2D(uWater, coords + vec2(uTexelSize.x, 0))) -
+                decodeHeight(texture2D(uWater, coords - vec2(uTexelSize.x, 0)));
+    
+    float dZy = decodeHeight(texture2D(uWater, coords + vec2(0, uTexelSize.y))) -
+                decodeHeight(texture2D(uWater, coords - vec2(0, uTexelSize.y)));
+    
+    vec3 normal = cross(vec3(uTexelSize.x, 0, dZx), vec3(0, uTexelSize.y, dZy));
+    normal.xy *= amplitude;
+
+    return normalize(normal);
+}
+
+void main(void) {
+    vec3 normal = computeNormal(sampleCoords);
+
+    gl_FragColor = vec4(0.5 * normal + 0.5, 1);
+}`;
+
 function buildTouchShader(gl: WebGLRenderingContext): Shader {
     const vertSrc: string = fullscreenVert;
     const fragSrc = touchFrag.replace(/___ENCODE_DECODE___/g, encodeDecodeStr);
@@ -154,8 +187,18 @@ function buildUpdateShader(gl: WebGLRenderingContext): Shader {
     return shader
 }
 
+function buildNormalsShader(gl: WebGLRenderingContext): Shader {
+    const vertSrc: string = fullscreenVert;
+    const fragSrc = normalsFrag.replace(/___ENCODE_DECODE___/g, encodeDecodeStr);
+
+    const shader: Shader = new Shader(gl, vertSrc, fragSrc);
+    shader.a["aCorner"].VBO = VBO.createQuad(gl, 0, 0, 1, 1);
+    return shader
+}
+
 export {
     encodeDecodeStr,
     buildTouchShader,
     buildUpdateShader,
+    buildNormalsShader,
 };

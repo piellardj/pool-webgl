@@ -6,8 +6,7 @@ const causticsVert: string =
     `attribute vec2 aVert;
 
 uniform sampler2D uWater;
-
-uniform vec2 uTexelSize;
+uniform sampler2D uNormals;
 
 uniform float uAmplitude;
 uniform float uDepth;
@@ -20,15 +19,8 @@ ___ENCODE_DECODE___
 
 vec3 computeNormal(vec2 coords)
 {
-    float dZx = decodeHeight(texture2D(uWater, coords + vec2(uTexelSize.x, 0))) -
-                decodeHeight(texture2D(uWater, coords - vec2(uTexelSize.x, 0)));
-    
-    float dZy = decodeHeight(texture2D(uWater, coords + vec2(0, uTexelSize.y))) -
-                decodeHeight(texture2D(uWater, coords - vec2(0, uTexelSize.y)));
-    
-    vec3 normal = cross(vec3(uTexelSize.x, 0, dZx), vec3(0, uTexelSize.y, dZy));
+    vec3 normal = texture2D(uNormals, coords).rgb * 2.0 - 1.0;
     normal.xy *= uAmplitude;
-
     return normalize(normal);
 }
 
@@ -38,7 +30,7 @@ void main(void) {
 
     vec3 ray = normalize(vec3(0, 0, -1));
     ray = refract(ray, normal, uEta);
-    vec3 toGround = uDepth * ray / ray.z;
+    vec3 toGround = (uDepth + h * uAmplitude) * ray / ray.z;
 
     vec2 groundCoords = aVert + toGround.xy;
 

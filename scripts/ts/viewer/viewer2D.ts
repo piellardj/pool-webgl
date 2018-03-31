@@ -84,7 +84,7 @@ class Viewer2D extends Viewer {
     FBO.bindDefault(gl);
 
     displayShader.u["uWater"].value = water.heightmap;
-    displayShader.u["uTexelSize"].value = [1 / water.width, 1 / water.height];
+    displayShader.u["uNormals"].value = water.normalmap;
     displayShader.u["uCausticsTexture"].value = this._caustics.texture;
     displayShader.u["uUseCaustics"].value = this.caustics;
     

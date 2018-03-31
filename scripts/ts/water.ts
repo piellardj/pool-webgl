@@ -9,24 +9,27 @@ class Water extends GLResource {
 
     private _FBO: FBO;
 
+    private _normalsTex: WebGLTexture;
     private _heightmapsTex: WebGLTexture[];
     private _currIndex: number;
 
     private _touchShader: Shader;
     private _updateShader: Shader;
+    private _normalsShader: Shader;
 
     private _surfaceTension: number;
     private _springStiffness: number;
     private _dispersion: number;
 
     public rain: boolean;
-    
+
     constructor(gl: WebGLRenderingContext, w: number, h: number) {
         super(gl);
 
         this._FBO = new FBO(gl, w, h);
         this._touchShader = ShaderBuilder.buildTouchShader(gl);
         this._updateShader = ShaderBuilder.buildUpdateShader(gl);
+        this._normalsShader = ShaderBuilder.buildNormalsShader(gl);
 
         this.surfaceTension = 20.0;
         this.springStiffness = 0.1;
@@ -49,6 +52,9 @@ class Water extends GLResource {
     private freeTextures(): void {
         const gl = super.gl; //shortcut
 
+        if (this._normalsTex) {
+            gl.deleteTexture(this._normalsTex);
+        }
         if (this._heightmapsTex) {
             gl.deleteTexture(this._heightmapsTex[0]);
             gl.deleteTexture(this._heightmapsTex[1]);
@@ -67,7 +73,7 @@ class Water extends GLResource {
 
     public update(dt: number): void {
         if (this.rain && Math.random() < 0.1) {
-            this.touch(Math.random()  * this.width, Math.random() * this.height, 8);
+            this.touch(Math.random() * this.width, Math.random() * this.height, 8);
         }
 
         const gl = this.gl; //shortcut
@@ -82,9 +88,23 @@ class Water extends GLResource {
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         this.switchHeightmaps();
+
+        this.computeNormals();
     }
 
-    public touch(coordX: number, coordY: number, radius: number) {
+    private computeNormals(): void {
+        const gl = this.gl; //shortcut
+        const shader = this._normalsShader;
+
+        shader.u["uWater"].value = this.currHeightmap;
+
+        this._FBO.bind([this._normalsTex]);
+        shader.use();
+        shader.bindUniformsAndAttributes();
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    public touch(coordX: number, coordY: number, radius: number): void {
         const gl = this.gl; //shortcut
         const touchShader = this._touchShader;
 
@@ -135,6 +155,10 @@ class Water extends GLResource {
         return this._heightmapsTex[this._currIndex];
     }
 
+    get normalmap(): WebGLTexture {
+        return this._normalsTex;
+    }
+
     private get currHeightmap(): WebGLTexture {
         return this._heightmapsTex[this._currIndex];
     }
@@ -158,6 +182,7 @@ class Water extends GLResource {
         this._FBO.height = h;
 
         this._updateShader.u["uTexelSize"].value = [1 / w, 1 / h];
+        this._normalsShader.u["uTexelSize"].value = [1 / w, 1 / h];
 
         const uintTexels: number[] = new Array(4 * w * h).fill(127);
         const uintData = new Uint8Array(uintTexels);
@@ -170,15 +195,26 @@ class Water extends GLResource {
             gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0,
                 gl.RGBA, gl.UNSIGNED_BYTE, uintData);
+            textures.push(texture);
+        }
+        {
+            let texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, w, h, 0,
+                gl.RGB, gl.UNSIGNED_BYTE, uintData);
+            textures.push(texture);
+        }
+
+        for (let iT of textures) {
+            gl.bindTexture(gl.TEXTURE_2D, iT);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrap);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrap);
-
-            textures.push(texture);
         }
 
-        this._heightmapsTex = textures;
+        this._normalsTex = textures[2];
+        this._heightmapsTex = [textures[0], textures[1]];
         this._currIndex = 0;
     }
 }
