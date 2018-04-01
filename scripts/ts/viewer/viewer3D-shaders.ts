@@ -3,6 +3,17 @@ import { encodeDecodeStr } from "../water-shaders";
 
 const waterCommonStr: string =
     `
+uniform sampler2D uCaustics;
+uniform sampler2D uTileTexture;
+
+uniform float uEta;
+uniform float uOpacity;
+uniform bool uSpecular;
+uniform bool uShowCaustics;
+
+const vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);
+const vec3 SPECULAR_COLOR = vec3(1);
+
 /* Fresnel factor describes the proportion of refracted and reflected.
 * Arguments expected to be normalized. */
 float getFresnelFactor(const vec3 normal, const vec3 fromEye)
@@ -25,7 +36,7 @@ vec3 getTileColor(const vec2 coords)
 
 float getCaustics(const vec2 coords)
 {
-    return 0.0;
+    return float(uShowCaustics) * texture2D(uCaustics, coords).r;
 }
 
 vec3 getFloorColor(const vec2 coords)
@@ -57,9 +68,16 @@ vec3 getReflectedColor(const vec3 dir)
     return 0.5*WATER_COLOR;
 }
 
-vec4 getSpecular(const vec3 reflected)
+vec4 getSpecular(const vec3 fromEye, const vec3 normal)
 {
-    return vec4(1,0,0,0);
+    vec3 fromLight = normalize(vec3(1,0,-2));
+
+    vec3 reflected = reflect(fromLight, normal);
+
+    float f = max(0.0, dot(-fromEye, reflected));
+    f = pow(f, 200.0);
+
+    return vec4(SPECULAR_COLOR, f);
 }
 
 vec3 computeColor(const vec3 pos, const vec3 fromEye, const vec3 normal)
@@ -73,7 +91,8 @@ vec3 computeColor(const vec3 pos, const vec3 fromEye, const vec3 normal)
     float fresnelFactor = getFresnelFactor(fromEye, normal);
 
     vec3 surfaceColor = mix(refractedColor, reflectedColor, fresnelFactor);
-    vec4 specularColor = getSpecular(reflected);
+    vec4 specularColor = getSpecular(fromEye, normal);
+    specularColor.a *= float(uSpecular);
 
     return mix(surfaceColor, specularColor.rgb, specularColor.a);
 }`;
@@ -109,19 +128,12 @@ const sidesFrag: string =
     `precision mediump float;
 
 uniform sampler2D uWater;
-uniform sampler2D uTileTexture;
 
 uniform vec3 uEyePos;
-
-uniform float uEta;
-uniform float uOpacity;
 
 varying vec3 vPosition;
 varying vec2 vNormal;
 varying float relativeHeight; //relative to amplitude, in [-1, +1]
-
-const vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);
-const vec3 SPARKLE_COLOR = vec3(1);
 
 ___ENCODE_DECODE___
 
@@ -183,18 +195,10 @@ void main(void) {
 const surfaceFrag: string =
     `precision mediump float;
 
-uniform sampler2D uTileTexture;
-
 uniform vec3 uEyePos;
-
-uniform float uEta;
-uniform float uOpacity;
 
 varying vec3 vPosition;
 varying vec3 vNormal;
-
-const vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);
-const vec3 SPARKLE_COLOR = vec3(1);
 
 ___WATER_COMMON___
 
@@ -205,7 +209,7 @@ void main(void)
 
     vec3 color = computeColor(vPosition, fromEye, normal);
 
-    gl_FragColor = mix(vec4(vNormal, 1), vec4(color, 1), 1.0);
+    gl_FragColor = mix(vec4(vNormal, 1), vec4(color, 1), 0.9);
 }`;
 
 function buildSidesShader(gl: WebGLRenderingContext): Shader {

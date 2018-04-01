@@ -14,6 +14,7 @@ class Viewer3D extends Viewer {
 
     private _pMatrix;
     private _mvMatrix;
+    private _mvpMatrix;
 
     private _distance: number;
     private _angle: number;
@@ -27,6 +28,8 @@ class Viewer3D extends Viewer {
     private _gridVertices: WebGLBuffer;
     private _gridIndices: WebGLBuffer;
 
+    private _caustics: Caustics;
+
     constructor(gl: WebGLRenderingContext) {
         function isPowerOf2(n) {
             if (typeof n !== 'number')
@@ -39,6 +42,8 @@ class Viewer3D extends Viewer {
 
         this._distance = 1;
         this._angle = 0;
+
+        this._caustics = new Caustics(gl, 512, 512);
 
         /* Texture */
         this._tileTexture = gl.createTexture();
@@ -61,10 +66,26 @@ class Viewer3D extends Viewer {
         };
         tileImg.src = "rc/tile.png";
 
-        const n = 128;
+        const n = 256;
         this.initSurface(n, n);
 
         this.init();
+    }
+
+    private get eyePos(): number[] {
+        return [
+            this._distance * Math.cos(this._angle),
+            this._distance * Math.sin(this._angle),
+            this.waterLevel + .8];
+    }
+
+    private updateViewMatrix(): void {
+        const from = this.eyePos;
+        const to = [0, 0, this.waterLevel - .5];
+        const up = [0, 0, 1];
+        mat4.lookAt(this._mvMatrix, from, to, up);
+
+        mat4.multiply(this._mvpMatrix, this._pMatrix, this._mvMatrix);
     }
 
     public initSurface(w: number, h: number): void {
@@ -129,24 +150,24 @@ class Viewer3D extends Viewer {
 
         gl.deleteBuffer(this._gridVertices);
         gl.deleteBuffer(this._gridIndices);
+        this._caustics.freeGLResources();
     }
 
     public display(water: Water): void {
         const gl = super.gl; //shortcut
 
         /* Update camera position */
-        this._angle += 0.002;
+        //this._angle += 0.005;
+        this.updateViewMatrix();
 
-        const from = [
-            this._distance * Math.cos(this._angle),
-            this._distance * Math.sin(this._angle),
-            this.waterLevel + .8];
-        const to = [0, 0, this.waterLevel - .5];
-        const up = [0, 0, 1];
-        mat4.lookAt(this._mvMatrix, from, to, up);
+        const eyePos = this.eyePos;
+        this._sidesShader.u["uEyePos"].value = eyePos;
+        this._surfaceShader.u["uEyePos"].value = eyePos;
 
-        this._sidesShader.u["uEyePos"].value = from;
-        this._surfaceShader.u["uEyePos"].value = from;
+        if (this.caustics) {
+            this._caustics.compute(water, this.amplitude, this.waterLevel, this.eta);
+            FBO.bindDefault(super.gl);
+        }
 
         /* Actual displaying */
         gl.enable(gl.CULL_FACE);
@@ -164,6 +185,7 @@ class Viewer3D extends Viewer {
         const shader = this._sidesShader;
 
         shader.u["uWater"].value = water.heightmap;
+        shader.u["uCaustics"].value = this._caustics.texture;
         shader.u["uTileTexture"].value = this._tileTexture;
 
         shader.use();
@@ -190,6 +212,7 @@ class Viewer3D extends Viewer {
         const shader = this._surfaceShader;
 
         shader.u["uWater"].value = water.heightmap;
+        shader.u["uCaustics"].value = this._caustics.texture;
         shader.u["uTileTexture"].value = this._tileTexture;
         shader.u["uNormals"].value = water.normalmap;
 
@@ -217,6 +240,7 @@ class Viewer3D extends Viewer {
         mat4.perspective(this._pMatrix, 45, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
 
         this._mvMatrix = mat4.create();
+        this._mvpMatrix = mat4.create();
 
         this._sidesShader = ShadersBuilder.buildSidesShader(gl);
         this._sidesShader.u["uMVMatrix"].value = this._mvMatrix;
@@ -301,10 +325,13 @@ class Viewer3D extends Viewer {
     }
 
     protected updateSpecular(): void {
-        //this._displayShader.u["uSpecular"].value = this.specular;
+        this._sidesShader.u["uSpecular"].value = this.specular;
+        this._surfaceShader.u["uSpecular"].value = this.specular;
     }
 
     protected updateCaustics(): void {
+        this._sidesShader.u["uShowCaustics"].value = this.caustics;
+        this._surfaceShader.u["uShowCaustics"].value = this.caustics;
     }
 
     protected updateAmplitude(): void {
@@ -322,7 +349,7 @@ class Viewer3D extends Viewer {
         this._sidesShader.u["uOpacity"].value = this.opacity;
         this._surfaceShader.u["uOpacity"].value = this.opacity;
     }
-    
+
     protected updateEta(): void {
         this._sidesShader.u["uEta"].value = this.eta;
         this._surfaceShader.u["uEta"].value = this.eta;
