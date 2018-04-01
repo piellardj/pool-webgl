@@ -202,16 +202,17 @@ function bind(canvas: HTMLCanvasElement, water: Water, viewer2D: Viewer2D, viewe
 }
 
 function bindRendererChooser(choose2D, choose3D) {
-    function bindInput(element: HTMLElement, func, input: string) {
-        element.addEventListener(input, func, false);
-        func();
-    }
-
     const button2D = document.getElementById("renderer-2D-button") as HTMLInputElement;
-    bindInput(button2D, choose2D, "change");
+    button2D.addEventListener("change", choose2D, false);
 
     const button3D = document.getElementById("renderer-3D-button") as HTMLInputElement;
-    bindInput(button3D, choose3D, "change");
+    button3D.addEventListener("change", choose3D, false);
+
+    if (button2D.checked) {
+        choose2D();
+    } else {
+        choose3D();
+    }
 }
 
 export { mouse, bind, bindRendererChooser};
