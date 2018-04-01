@@ -45,6 +45,15 @@ vec2 encodeHeight(float h)
     return encode(h, HEIGHT_RANGE);
 }
 
+vec3 decodeNormal(vec4 texel)
+{
+    return 2.0 * texel.rgb + 1.0;
+}
+vec4 encodeNormal(vec3 n)
+{
+    return vec4(0.5 * n + 0.5, 1);
+}
+
 float decodeVelocity(vec4 texel)
 {
     return decode(texel.ba, VEL_RANGE);
@@ -166,7 +175,7 @@ vec3 computeNormal(vec2 coords)
 void main(void) {
     vec3 normal = computeNormal(sampleCoords);
 
-    gl_FragColor = vec4(0.5 * normal + 0.5, 1);
+    gl_FragColor = encodeNormal(normal);
 }`;
 
 function buildTouchShader(gl: WebGLRenderingContext): Shader {

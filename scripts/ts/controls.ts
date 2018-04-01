@@ -1,5 +1,6 @@
 import Water from "./water";
 import Viewer2D from "./viewer/viewer2D";
+import Viewer3D from "./viewer/viewer3D";
 
 class Mouse {
     private elt: HTMLElement;
@@ -101,7 +102,7 @@ function bindMouse(canvas: HTMLCanvasElement): void {
     mouse = new Mouse(canvas);
 }
 
-function bindControls(water: Water, viewer2D: Viewer2D): void {
+function bindControls(water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): void {
     function bindInput(element: HTMLElement, func, input: string) {
         element.addEventListener(input, func, false);
         func();
@@ -147,38 +148,56 @@ function bindControls(water: Water, viewer2D: Viewer2D): void {
 
     {
         const specularCheckbox: HTMLInputElement = document.getElementById("specular-checkbox") as HTMLInputElement;
-        const updateSpecular = () => { viewer2D.specular = specularCheckbox.checked; };
+        const updateSpecular = () => {
+            viewer2D.specular = specularCheckbox.checked;
+            viewer3D.specular = specularCheckbox.checked;
+        };
         bindInput(specularCheckbox, updateSpecular, "change");
     }
     {
         const causticsCheckbox: HTMLInputElement = document.getElementById("caustics-checkbox") as HTMLInputElement;
-        const updateCaustics = () => { viewer2D.caustics = causticsCheckbox.checked; };
+        const updateCaustics = () => {
+            viewer2D.caustics = causticsCheckbox.checked;
+            viewer3D.caustics = causticsCheckbox.checked;
+        };
         bindInput(causticsCheckbox, updateCaustics, "change");
     }
     {
         const amplitudeSlider: HTMLInputElement = document.getElementById("amplitude-slider") as HTMLInputElement;
-        const updateAmplitude = () => { viewer2D.amplitude = +amplitudeSlider.value; };
+        const updateAmplitude = () => {
+            viewer2D.amplitude = +amplitudeSlider.value;
+            viewer3D.amplitude = +amplitudeSlider.value;
+        };
         bindInput(amplitudeSlider, updateAmplitude, "input");
     }
     {
         const depthSlider: HTMLInputElement = document.getElementById("depth-slider") as HTMLInputElement;
-        const updateDepth = () => { viewer2D.depth = +depthSlider.value; };
+        const updateDepth = () => {
+            viewer2D.depth = +depthSlider.value;
+            viewer3D.depth = +depthSlider.value;
+        };
         bindInput(depthSlider, updateDepth, "input");
     }
     {
         const opacitySlider: HTMLInputElement = document.getElementById("opacity-slider") as HTMLInputElement;
-        const updateOpacity = () => { viewer2D.opacity = +opacitySlider.value; };
+        const updateOpacity = () => {
+            viewer2D.opacity = +opacitySlider.value;
+            viewer3D.opacity = +opacitySlider.value;
+        };
         bindInput(opacitySlider, updateOpacity, "input");
     }
     {
         const etaSlider: HTMLInputElement = document.getElementById("refraction-slider") as HTMLInputElement;
-        const updateEta = () => { viewer2D.eta = +etaSlider.value; };
+        const updateEta = () => {
+            viewer2D.eta = +etaSlider.value;
+            viewer3D.eta = +etaSlider.value;
+        };
         bindInput(etaSlider, updateEta, "input");
     }
 }
 
-function bind(canvas: HTMLCanvasElement, water: Water, viewer2D: Viewer2D): void {
-    bindControls(water, viewer2D);
+function bind(canvas: HTMLCanvasElement, water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): void {
+    bindControls(water, viewer2D, viewer3D);
     bindMouse(canvas);
 }
 

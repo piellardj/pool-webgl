@@ -3,6 +3,8 @@ import FBO from "./gl-utils/fbo";
 import Water from "./water";
 import Viewer from "./viewer/viewer";
 import Viewer2D from "./viewer/viewer2D";
+import Viewer3D from "./viewer/viewer3D";
+
 import * as Controls from "./controls";
 
 /** Initializes a WebGL context */
@@ -39,10 +41,11 @@ function main() {
     const side = 512;
     const water: Water = new Water(gl, side, side);
     const viewer2D: Viewer2D = new Viewer2D(gl);
+    const viewer3D: Viewer3D = new Viewer3D(gl);
 
-    Controls.bind(canvas, water, viewer2D);
+    Controls.bind(canvas, water, viewer2D, viewer3D);
 
-    let viewer: Viewer = viewer2D;
+    let viewer: Viewer = viewer3D;
 
     /* Update the FPS indicator every second. */
     let instantFPS: number = 0;

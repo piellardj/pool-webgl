@@ -19,7 +19,7 @@ ___ENCODE_DECODE___
 
 vec3 computeNormal(vec2 coords)
 {
-    vec3 normal = texture2D(uNormals, coords).rgb * 2.0 - 1.0;
+    vec3 normal = decodeNormal(texture2D(uNormals, coords));
     normal.xy *= uAmplitude;
     return normalize(normal);
 }

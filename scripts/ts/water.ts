@@ -72,11 +72,15 @@ class Water extends GLResource {
     }
 
     public update(dt: number): void {
+        const gl = this.gl; //shortcut
+
+        gl.disable(gl.CULL_FACE);
+        gl.disable(gl.DEPTH_TEST);
+
         if (this.rain && Math.random() < 0.1) {
             this.touch(Math.random() * this.width, Math.random() * this.height, 8);
         }
 
-        const gl = this.gl; //shortcut
         const updateShader = this._updateShader;
 
         updateShader.u["uPrevWater"].value = this.currHeightmap;

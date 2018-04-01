@@ -40,7 +40,7 @@ vec4 sampleTileTex(vec2 coords)
 
 vec3 computeNormal(vec2 coords)
 {
-    vec3 normal = texture2D(uNormals, coords).rgb * 2.0 - 1.0;
+    vec3 normal = decodeNormal(texture2D(uNormals, coords));
     normal.xy *= uAmplitude;
     return normalize(normal);
 }
@@ -69,7 +69,7 @@ void main(void)
     vec3 tileColor = sampleTileTex(groundCoords).rgb;
     float caustics = texture2D(uCausticsTexture, groundCoords).r;
 
-    vec3 waterColor = vec3(0.0, 0.2, 0.5);
+    const vec3 waterColor = vec3(0.0, 0.2, 0.5);
 
     float opacity = uOpacity * length(toGround);
     opacity = clamp(opacity, 0.0, 1.0);
