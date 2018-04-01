@@ -12,13 +12,6 @@ class Viewer3D extends Viewer {
 
     private _tileTexture: WebGLTexture;
 
-    private _specular: boolean;
-    public caustics: boolean;
-    private _amplitude: number;
-    private _depth: number;
-    private _opacity: number;
-    private _eta: number;
-
     private _pMatrix;
     private _mvMatrix;
 
@@ -204,7 +197,7 @@ class Viewer3D extends Viewer {
         shader.u["uNormals"].value = water.normalmap;
 
         shader.use();
-        shader.bindUniforms();//AndAttributes();
+        shader.bindUniforms();
 
         gl.enableVertexAttribArray(0);
         gl.bindBuffer(gl.ARRAY_BUFFER, this._gridVertices);
@@ -310,48 +303,32 @@ class Viewer3D extends Viewer {
         }
     }
 
-    set specular(b: boolean) {
-        this._specular = b;
-        //this._displayShader.u["uSpecular"].value = b;
-    }
-    get specular(): boolean {
-        return this._specular;
+    protected updateSpecular(): void {
+        //this._displayShader.u["uSpecular"].value = super.specular;
     }
 
-    set amplitude(a: number) {
-        this._amplitude = a;
-        this._sidesShader.u["uAmplitude"].value = 200 * a;
-        this._surfaceShader.u["uAmplitude"].value = 200 * a;
-    }
-    get amplitude(): number {
-        return this._amplitude;
+    protected updateCaustics(): void {
     }
 
-    set depth(d: number) {
-        this._depth = d;
-        this._sidesShader.u["uDepth"].value = d;
-        this._surfaceShader.u["uDepth"].value = d;
-    }
-    get depth(): number {
-        return this._depth;
+    protected updateAmplitude(): void {
+        const amplitude = 200 * super.amplitude;
+        this._sidesShader.u["uAmplitude"].value = amplitude;
+        this._surfaceShader.u["uAmplitude"].value = amplitude;
     }
 
-    set opacity(o: number) {
-        this._opacity = o;
-        this._sidesShader.u["uOpacity"].value = o;
-        this._surfaceShader.u["uOpacity"].value = o;
-    }
-    get opacity(): number {
-        return this._opacity;
+    protected updateDepth(): void {
+        this._sidesShader.u["uDepth"].value = this.depth;
+        this._surfaceShader.u["uDepth"].value = this.depth;
     }
 
-    set eta(e: number) {
-        this._eta = e;
-        this._sidesShader.u["uEta"].value = e;
-        this._surfaceShader.u["uEta"].value = e;
+    protected updateOpacity(): void {
+        this._sidesShader.u["uOpacity"].value = this.opacity;
+        this._surfaceShader.u["uOpacity"].value = this.opacity;
     }
-    get eta(): number {
-        return this._eta;
+    
+    protected updateEta(): void {
+        this._sidesShader.u["uEta"].value = this.eta;
+        this._surfaceShader.u["uEta"].value = this.eta;
     }
 }
 

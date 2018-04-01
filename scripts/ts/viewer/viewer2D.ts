@@ -13,13 +13,6 @@ class Viewer2D extends Viewer {
 
     private _tileTexture: WebGLTexture;
 
-    private _specular: boolean;
-    public caustics: boolean;
-    private _amplitude: number;
-    private _depth: number;
-    private _opacity: number;
-    private _eta: number;
-
     constructor(gl: WebGLRenderingContext) {
         function isPowerOf2(n) {
             if (typeof n !== 'number')
@@ -104,44 +97,27 @@ class Viewer2D extends Viewer {
         }
     }
 
-    set specular(b: boolean) {
-        this._specular = b;
-        this._displayShader.u["uSpecular"].value = b;
-    }
-    get specular(): boolean {
-        return this._specular;
+    protected updateSpecular(): void {
+        this._displayShader.u["uSpecular"].value = super.specular;
     }
 
-    set amplitude(a: number) {
-        this._amplitude = a;
-        this._displayShader.u["uAmplitude"].value = a;
-    }
-    get amplitude(): number {
-        return this._amplitude;
+    protected updateCaustics(): void {
     }
 
-    set depth(d: number) {
-        this._depth = d;
-        this._displayShader.u["uDepth"].value = d;
-    }
-    get depth(): number {
-        return this._depth;
+    protected updateAmplitude(): void {
+        this._displayShader.u["uAmplitude"].value = super.amplitude;
     }
 
-    set opacity(o: number) {
-        this._opacity = o;
-        this._displayShader.u["uOpacity"].value = o;
-    }
-    get opacity(): number {
-        return this._opacity;
+    protected updateDepth(): void {
+        this._displayShader.u["uDepth"].value = super.depth;
     }
 
-    set eta(e: number) {
-        this._eta = e;
-        this._displayShader.u["uEta"].value = e;
+    protected updateOpacity(): void {
+        this._displayShader.u["uOpacity"].value = super.opacity;
     }
-    get eta(): number {
-        return this._eta;
+    
+    protected updateEta(): void {
+        this._displayShader.u["uEta"].value = super.eta;
     }
 }
 
