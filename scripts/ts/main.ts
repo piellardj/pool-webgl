@@ -46,6 +46,9 @@ function main() {
     Controls.bind(canvas, water, viewer2D, viewer3D);
 
     let viewer: Viewer = viewer3D;
+    Controls.bindRendererChooser(
+        () => { viewer = viewer2D; },
+        () => { viewer = viewer3D; });
 
     /* Update the FPS indicator every second. */
     let instantFPS: number = 0;
