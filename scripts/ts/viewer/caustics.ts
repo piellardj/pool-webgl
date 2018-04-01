@@ -54,17 +54,17 @@ class Caustics extends GLResource {
         }
     }
 
-    public compute(water: Water, amplitude: number, depth: number, eta: number): void {
+    public compute(water: Water, amplitude: number, waterLevel: number, eta: number): void {
         if (!this.supported)
             return;
 
-        const gl = super.gl;
+        const gl = super.gl; //shortcut
         const shader = this._shader;
 
         shader.u["uWater"].value = water.heightmap;
         shader.u["uNormals"].value = water.normalmap;
         shader.u["uAmplitude"].value = amplitude;
-        shader.u["uDepth"].value = depth;
+        shader.u["uWaterLevel"].value = waterLevel;
         shader.u["uEta"].value = eta;
 
         this._fbo.bind([this._texture]);
@@ -93,7 +93,7 @@ class Caustics extends GLResource {
 
         this.freeGLResources();
 
-        const gl = super.gl;
+        const gl = super.gl; //shortcut
 
         this._width = w;
         this._height = h;

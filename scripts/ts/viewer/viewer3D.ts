@@ -40,9 +40,6 @@ class Viewer3D extends Viewer {
         this._distance = 1;
         this._angle = 0;
 
-        this._depth = 2;
-        this._amplitude = .1;
-
         /* Texture */
         this._tileTexture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this._tileTexture);
@@ -122,7 +119,7 @@ class Viewer3D extends Viewer {
     }
 
     public freeGLResources(): void {
-        const gl = super.gl;
+        const gl = super.gl; //shortcut
 
         gl.deleteTexture(this._tileTexture);
         gl.deleteBuffer(this._vertices);
@@ -143,8 +140,8 @@ class Viewer3D extends Viewer {
         const from = [
             this._distance * Math.cos(this._angle),
             this._distance * Math.sin(this._angle),
-            this.depth + .8];
-        const to = [0, 0, this.depth - .5];
+            this.waterLevel + .8];
+        const to = [0, 0, this.waterLevel - .5];
         const up = [0, 0, 1];
         mat4.lookAt(this._mvMatrix, from, to, up);
 
@@ -304,21 +301,21 @@ class Viewer3D extends Viewer {
     }
 
     protected updateSpecular(): void {
-        //this._displayShader.u["uSpecular"].value = super.specular;
+        //this._displayShader.u["uSpecular"].value = this.specular;
     }
 
     protected updateCaustics(): void {
     }
 
     protected updateAmplitude(): void {
-        const amplitude = 200 * super.amplitude;
+        const amplitude = 200 * this.amplitude;
         this._sidesShader.u["uAmplitude"].value = amplitude;
         this._surfaceShader.u["uAmplitude"].value = amplitude;
     }
 
-    protected updateDepth(): void {
-        this._sidesShader.u["uDepth"].value = this.depth;
-        this._surfaceShader.u["uDepth"].value = this.depth;
+    protected updateWaterLevel(): void {
+        this._sidesShader.u["uWaterLevel"].value = this.waterLevel;
+        this._surfaceShader.u["uWaterLevel"].value = this.waterLevel;
     }
 
     protected updateOpacity(): void {

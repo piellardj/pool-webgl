@@ -9,7 +9,7 @@ uniform sampler2D uWater;
 uniform sampler2D uNormals;
 
 uniform float uAmplitude;
-uniform float uDepth;
+uniform float uWaterLevel;
 uniform float uEta;
 
 varying vec2 sourceCoords;
@@ -30,7 +30,7 @@ void main(void) {
 
     vec3 ray = normalize(vec3(0, 0, -1));
     ray = refract(ray, normal, uEta);
-    vec3 toGround = (uDepth + h * uAmplitude) * ray / ray.z;
+    vec3 toGround = (uWaterLevel + h * uAmplitude) * ray / ray.z;
 
     vec2 groundCoords = aVert + toGround.xy;
 

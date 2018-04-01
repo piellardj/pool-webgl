@@ -53,13 +53,13 @@ class Viewer2D extends Viewer {
 
         this.specular = true;
         this.amplitude = 0.001;
-        this.depth = 1;
+        this.waterLevel = 1;
         this.opacity = 0.15;
         this.eta = 1.17;
     }
 
     public freeGLResources(): void {
-        const gl = super.gl;
+        const gl = super.gl; //shortcut
 
         this._caustics.freeGLResources();
         this._displayShader.freeGLResources();
@@ -73,7 +73,7 @@ class Viewer2D extends Viewer {
         gl.disable(gl.DEPTH_TEST);
 
         if (this.caustics) {
-            this._caustics.compute(water, this.amplitude, this.depth, this.eta);
+            this._caustics.compute(water, this.amplitude, this.waterLevel, this.eta);
         }
 
         const displayShader = this._displayShader;
@@ -98,26 +98,26 @@ class Viewer2D extends Viewer {
     }
 
     protected updateSpecular(): void {
-        this._displayShader.u["uSpecular"].value = super.specular;
+        this._displayShader.u["uSpecular"].value = this.specular;
     }
 
     protected updateCaustics(): void {
     }
 
     protected updateAmplitude(): void {
-        this._displayShader.u["uAmplitude"].value = super.amplitude;
+        this._displayShader.u["uAmplitude"].value = this.amplitude;
     }
 
-    protected updateDepth(): void {
-        this._displayShader.u["uDepth"].value = super.depth;
+    protected updateWaterLevel(): void {
+        this._displayShader.u["uWaterLevel"].value = this.waterLevel;
     }
 
     protected updateOpacity(): void {
-        this._displayShader.u["uOpacity"].value = super.opacity;
+        this._displayShader.u["uOpacity"].value = this.opacity;
     }
     
     protected updateEta(): void {
-        this._displayShader.u["uEta"].value = super.eta;
+        this._displayShader.u["uEta"].value = this.eta;
     }
 }
 

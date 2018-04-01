@@ -85,7 +85,7 @@ attribute vec2 aNormal; //normalized in {-1, +1} x {-1, +1}
 uniform mat4 uMVMatrix;
 uniform mat4 uPMatrix;
 
-uniform float uDepth;
+uniform float uWaterLevel;
 uniform float uAmplitude;
 
 varying vec3 vPosition;
@@ -96,11 +96,11 @@ void main(void) {
     float dH = uAmplitude / 2.0;
 
     vPosition = aPosition;
-    vPosition.z *= uDepth + dH;
+    vPosition.z *= uWaterLevel + dH;
 
     vNormal = aNormal;
 
-    relativeHeight = (vPosition.z - uDepth) / dH;
+    relativeHeight = (vPosition.z - uWaterLevel) / dH;
     
     gl_Position = uPMatrix * uMVMatrix * vec4(vPosition, 1.0);
 }`;
@@ -158,7 +158,7 @@ uniform mat4 uPMatrix;
 uniform sampler2D uWater;
 uniform sampler2D uNormals;
 
-uniform float uDepth;
+uniform float uWaterLevel;
 uniform float uAmplitude;
 
 varying vec3 vPosition;
@@ -172,7 +172,7 @@ void main(void) {
     float dH = uAmplitude / 2.0;
 
     vPosition.xy = aSampleCoords - .5;
-    vPosition.z = uDepth + dH * height;
+    vPosition.z = uWaterLevel + dH * height;
 
     vNormal = decodeNormal(texture2D(uNormals, aSampleCoords));
     vNormal = normalize(vec3(vNormal * vec3(dH, dH, 1)));

@@ -5,7 +5,7 @@ abstract class Viewer extends GLResource {
     private _showSpecular: boolean;
     private _showCaustics: boolean;
     private _amplitude: number;
-    private _depth: number;
+    private _waterLevel: number;
     private _opacity: number;
     private _eta: number;
 
@@ -23,7 +23,7 @@ abstract class Viewer extends GLResource {
     protected abstract updateSpecular(): void;
     protected abstract updateCaustics(): void;
     protected abstract updateAmplitude(): void;
-    protected abstract updateDepth(): void;
+    protected abstract updateWaterLevel(): void;
     protected abstract updateOpacity(): void;
     protected abstract updateEta(): void;
 
@@ -51,12 +51,12 @@ abstract class Viewer extends GLResource {
         return this._amplitude;
     }
 
-    set depth(d: number) {
-        this._depth = d;
-        this.updateDepth();
+    set waterLevel(d: number) {
+        this._waterLevel = d;
+        this.updateWaterLevel();
     }
-    get depth(): number {
-        return this._depth;
+    get waterLevel(): number {
+        return this._waterLevel;
     }
 
     set opacity(o: number) {

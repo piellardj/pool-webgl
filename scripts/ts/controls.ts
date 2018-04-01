@@ -171,12 +171,12 @@ function bindControls(water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): voi
         bindInput(amplitudeSlider, updateAmplitude, "input");
     }
     {
-        const depthSlider: HTMLInputElement = document.getElementById("depth-slider") as HTMLInputElement;
-        const updateDepth = () => {
-            viewer2D.depth = +depthSlider.value;
-            viewer3D.depth = +depthSlider.value;
+        const levelSlider: HTMLInputElement = document.getElementById("level-slider") as HTMLInputElement;
+        const updateWaterLevel = () => {
+            viewer2D.waterLevel = +levelSlider.value;
+            viewer3D.waterLevel = +levelSlider.value;
         };
-        bindInput(depthSlider, updateDepth, "input");
+        bindInput(levelSlider, updateWaterLevel, "input");
     }
     {
         const opacitySlider: HTMLInputElement = document.getElementById("opacity-slider") as HTMLInputElement;

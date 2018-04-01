@@ -25,7 +25,7 @@ uniform vec2 uTileRepetition;
 uniform bool uSpecular;
 uniform bool uUseCaustics;
 uniform float uAmplitude;
-uniform float uDepth;
+uniform float uWaterLevel;
 uniform float uOpacity;
 uniform float uEta;
 
@@ -63,7 +63,7 @@ void main(void)
 
     vec3 ray = vec3(0, 0, -1);
     ray = refract(ray, normal, uEta);
-    vec3 toGround = (uDepth + h * uAmplitude) * ray / ray.z;
+    vec3 toGround = (uWaterLevel + h * uAmplitude) * ray / ray.z;
 
     vec2 groundCoords = sampleCoords + toGround.xy;
     vec3 tileColor = sampleTileTex(groundCoords).rgb;
