@@ -13,6 +13,7 @@ uniform bool uShowCaustics;
 
 const vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);
 const vec3 SPECULAR_COLOR = vec3(1);
+const float TILE_REPETITION = 4.0;
 
 /* Fresnel factor describes the proportion of refracted and reflected.
 * Arguments expected to be normalized. */
@@ -31,7 +32,7 @@ vec3 getTileColor(const vec2 coords)
         return vec3(0);
     }
 
-    return texture2D(uTileTexture, 4.0 * coords).rgb;
+    return texture2D(uTileTexture, TILE_REPETITION * coords).rgb;
 }
 
 float getCaustics(const vec2 coords)
@@ -76,6 +77,7 @@ vec4 getSpecular(const vec3 fromEye, const vec3 normal)
 
     float f = max(0.0, dot(-fromEye, reflected));
     f = pow(f, 200.0);
+    f *= float(uSpecular);
 
     return vec4(SPECULAR_COLOR, f);
 }
@@ -92,7 +94,6 @@ vec3 computeColor(const vec3 pos, const vec3 fromEye, const vec3 normal)
 
     vec3 surfaceColor = mix(refractedColor, reflectedColor, fresnelFactor);
     vec4 specularColor = getSpecular(fromEye, normal);
-    specularColor.a *= float(uSpecular);
 
     return mix(surfaceColor, specularColor.rgb, specularColor.a);
 }`;
@@ -186,8 +187,7 @@ void main(void) {
     vPosition.xy = aSampleCoords - .5;
     vPosition.z = uWaterLevel + dH * height;
 
-    vNormal = decodeNormal(texture2D(uNormals, aSampleCoords));
-    vNormal = normalize(vec3(vNormal * vec3(dH, dH, 1)));
+    vNormal = decodeNormal(texture2D(uNormals, aSampleCoords), uAmplitude);
     
     gl_Position = uPMatrix * uMVMatrix * vec4(vPosition, 1.0);
 }`;

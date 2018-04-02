@@ -45,9 +45,10 @@ vec2 encodeHeight(float h)
     return encode(h, HEIGHT_RANGE);
 }
 
-vec3 decodeNormal(vec4 texel)
+vec3 decodeNormal(vec4 texel, float amplitude)
 {
-    return 2.0 * texel.rgb + 1.0;
+    vec3 result = 2.0 * texel.rgb - 1.0;
+    return normalize(result * vec3(amplitude, amplitude, 1));
 }
 vec4 encodeNormal(vec3 n)
 {
@@ -69,9 +70,6 @@ Cell decodeCell(vec4 texel)
 }
 vec4 encodeCell(Cell cell)
 {
-    //cell.h = 0.9 * clamp(cell.h, -HEIGHT_RANGE, HEIGHT_RANGE);
-    //cell.v = 0.9 * clamp(cell.v, -VEL_RANGE, VEL_RANGE);
-
     return vec4(encodeHeight(cell.h), encodeVelocity(cell.v));
 }`;
 
@@ -156,10 +154,9 @@ varying vec2 sampleCoords;
 
 ___ENCODE_DECODE___
 
+/* Returns the normal, assuming the amplitude is 1. */
 vec3 computeNormal(vec2 coords)
 {
-    const float amplitude = 1.0;
-
     float dZx = decodeHeight(texture2D(uWater, coords + vec2(uTexelSize.x, 0))) -
                 decodeHeight(texture2D(uWater, coords - vec2(uTexelSize.x, 0)));
     
@@ -167,8 +164,8 @@ vec3 computeNormal(vec2 coords)
                 decodeHeight(texture2D(uWater, coords - vec2(0, uTexelSize.y)));
     
     vec3 normal = cross(vec3(uTexelSize.x, 0, dZx), vec3(0, uTexelSize.y, dZy));
-    normal.xy *= amplitude;
-
+    normal.xy /= HEIGHT_RANGE;
+    
     return normalize(normal);
 }
 

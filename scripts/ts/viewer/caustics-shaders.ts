@@ -17,20 +17,14 @@ varying vec2 refractedCoords;
 
 ___ENCODE_DECODE___
 
-vec3 computeNormal(vec2 coords)
-{
-    vec3 normal = decodeNormal(texture2D(uNormals, coords));
-    normal.xy *= uAmplitude;
-    return normalize(normal);
-}
-
 void main(void) {
-    float h = decodeHeight(texture2D(uWater, aVert));
-    vec3 normal = computeNormal(aVert);
+    float height = decodeHeight(texture2D(uWater, aVert));
+    height = uWaterLevel + 0.5 * uAmplitude * height;
+    vec3 normal = decodeNormal(texture2D(uNormals, aVert), uAmplitude);
 
-    vec3 ray = normalize(vec3(0, 0, -1));
-    ray = refract(ray, normal, uEta);
-    vec3 toGround = (uWaterLevel + h * uAmplitude) * ray / ray.z;
+    const vec3 fromLight = vec3(0, 0, -1);
+    vec3 refracted = refract(fromLight, normal, uEta);
+    vec3 toGround = height * refracted / refracted.z;
 
     vec2 groundCoords = aVert + toGround.xy;
 
@@ -48,10 +42,7 @@ varying vec2 sourceCoords;
 varying vec2 refractedCoords;
 
 void main(void)
-{   
-    // float sourceArea = length(dot(dFdx(sourceCoords), dFdy(sourceCoords)));
-    // float refractedArea = length(dot(dFdx(refractedCoords), dFdy(refractedCoords)));
-
+{
     float sourceArea = length(dFdx(sourceCoords)) * length(dFdy(sourceCoords));
     float refractedArea = length(dFdx(refractedCoords)) * length(dFdy(refractedCoords));
 

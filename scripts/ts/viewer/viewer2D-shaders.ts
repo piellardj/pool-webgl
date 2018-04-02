@@ -17,72 +17,51 @@ const displayFrag: string =
 
 uniform sampler2D uWater;
 uniform sampler2D uNormals;
+uniform sampler2D uCaustics;
 uniform sampler2D uTileTexture;
-uniform sampler2D uCausticsTexture;
 
-uniform vec2 uTileRepetition;
-
-uniform bool uSpecular;
-uniform bool uUseCaustics;
-uniform float uAmplitude;
 uniform float uWaterLevel;
-uniform float uOpacity;
+uniform float uAmplitude;
 uniform float uEta;
+uniform float uOpacity;
+uniform bool uShowSpecular;
+uniform bool uShowCaustics;
 
 varying vec2 sampleCoords;
 
 ___ENCODE_DECODE___
 
-vec4 sampleTileTex(vec2 coords)
-{
-    return texture2D(uTileTexture, coords * uTileRepetition);
-}
-
-vec3 computeNormal(vec2 coords)
-{
-    vec3 normal = decodeNormal(texture2D(uNormals, coords));
-    normal.xy *= uAmplitude;
-    return normalize(normal);
-}
-
-float computeSpecular(vec3 normal, vec3 fromLight)
-{
-    vec3 reflected = reflect(fromLight, normal);
-    float result = max(0.0, dot(normal, reflected));
-
-    result = pow(result, 50.0);
-
-    return (result-0.9)/.3 * step(0.9, result) + 
-           0.9 * step(0.9, pow(result, 4.0));
-}
+const vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);
+const vec3 SPECULAR_COLOR = vec3(1);
+const float TILE_REPETITION = 4.0;
 
 void main(void)
 {
-    float h = decodeHeight(texture2D(uWater, sampleCoords));
-    vec3 normal = computeNormal(sampleCoords);
+    float height = decodeHeight(texture2D(uWater, sampleCoords));
+    height = uWaterLevel + 0.5 * uAmplitude * height;
+    vec3 normal = decodeNormal(texture2D(uNormals, sampleCoords), uAmplitude);
 
-    vec3 ray = vec3(0, 0, -1);
-    ray = refract(ray, normal, uEta);
-    vec3 toGround = (uWaterLevel + h * uAmplitude) * ray / ray.z;
+    vec3 position = vec3(sampleCoords, height);
 
-    vec2 groundCoords = sampleCoords + toGround.xy;
-    vec3 tileColor = sampleTileTex(groundCoords).rgb;
-    float caustics = texture2D(uCausticsTexture, groundCoords).r;
+    const vec3 fromEye = vec3(0, 0, -1);
+    vec3 refracted = refract(fromEye, normal, uEta);
+    refracted *= height / refracted.z;
+    vec2 coordsOnFloor = sampleCoords + refracted.xy;
 
-    const vec3 waterColor = vec3(0.0, 0.2, 0.5);
+    vec3 tileColor = texture2D(uTileTexture, TILE_REPETITION * coordsOnFloor).rgb;
+    float caustics = texture2D(uCaustics, coordsOnFloor).r;
+    caustics = caustics * float(uShowCaustics);
+    vec3 floorColor = tileColor * (1.0 + caustics);
 
-    float opacity = uOpacity * length(toGround);
-    opacity = clamp(opacity, 0.0, 1.0);
+    float opacity = clamp(uOpacity * length(refracted), 0.0, 1.0);
+    vec3 color = mix(floorColor, WATER_COLOR, opacity);
 
-    const vec3 fromLight = normalize(vec3(-.03,-.05,-1));
-    float specular = computeSpecular(normal, fromLight);
+    const vec3 fromLight = normalize(vec3(.01, -.02, -1));
+    vec3 reflected = reflect(fromLight, normal);
+    float specular = max(0.0, dot(reflected, -fromEye));
+    specular = pow(specular, 100.0) * float(uShowSpecular);
 
-    vec3 bottomColor = tileColor + float(uUseCaustics) * caustics;
-    vec3 finalColor = mix(bottomColor, waterColor, opacity) +
-                      vec3(specular) * float(uSpecular);
-
-    //finalColor = 0.001* finalColor + normal;
-    gl_FragColor = vec4(finalColor, 1.0);
+    gl_FragColor = vec4(color + specular, 1);
 }`;
 
 function buildDisplayShader(gl: WebGLRenderingContext): Shader {

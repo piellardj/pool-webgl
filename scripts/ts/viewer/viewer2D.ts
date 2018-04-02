@@ -24,7 +24,6 @@ class Viewer2D extends Viewer {
         super(gl);
 
         this._caustics = new Caustics(gl, 512, 512);
-        this.caustics = true;
 
         this._tileTexture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this._tileTexture);
@@ -49,13 +48,7 @@ class Viewer2D extends Viewer {
 
         this._displayShader = ShadersBuilder.buildDisplayShader(gl);
         this._displayShader.u["uTileTexture"].value = this._tileTexture;
-        this._displayShader.u["uTileRepetition"].value = [4, 4];
-
-        this.specular = true;
-        this.amplitude = 0.001;
-        this.waterLevel = 1;
-        this.opacity = 0.15;
-        this.eta = 1.17;
+        this._displayShader.u["uCaustics"].value = this._caustics.texture;
     }
 
     public freeGLResources(): void {
@@ -82,8 +75,6 @@ class Viewer2D extends Viewer {
 
         displayShader.u["uWater"].value = water.heightmap;
         displayShader.u["uNormals"].value = water.normalmap;
-        displayShader.u["uCausticsTexture"].value = this._caustics.texture;
-        displayShader.u["uUseCaustics"].value = this.caustics;
 
         displayShader.use();
         displayShader.bindUniformsAndAttributes();
@@ -98,10 +89,11 @@ class Viewer2D extends Viewer {
     }
 
     protected updateSpecular(): void {
-        this._displayShader.u["uSpecular"].value = this.specular;
+        this._displayShader.u["uShowSpecular"].value = this.specular;
     }
 
     protected updateCaustics(): void {
+        this._displayShader.u["uShowCaustics"].value = this.caustics;
     }
 
     protected updateAmplitude(): void {
