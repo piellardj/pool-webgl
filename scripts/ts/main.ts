@@ -20,14 +20,12 @@ function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
             "The simulation may not run as expected.");
     }
 
-    if (gl) {
-        gl.disable(gl.CULL_FACE);
-        gl.disable(gl.DEPTH_TEST);
-        gl.disable(gl.BLEND);
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.disable(gl.CULL_FACE);
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
-        Utils.resizeCanvas(gl, false);
-    }
+    Utils.resizeCanvas(gl, false);
 
     return gl;
 }
