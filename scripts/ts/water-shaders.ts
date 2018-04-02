@@ -101,7 +101,7 @@ void main(void) {
     float dist = length((sampleCoords - uCoords) / uSize);
     dist = clamp(dist, 0.0, 1.0);
 
-    cell.h = mix(-0.5*HEIGHT_RANGE, cell.h, dist);
+    cell.h = mix(-0.9*HEIGHT_RANGE, cell.h, smoothstep(0.0, 1.0, dist));
     cell.v *= step(1.0, dist);
 
     gl_FragColor = encodeCell(cell);
