@@ -122,6 +122,7 @@ class Water extends GLResource {
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
         this.switchHeightmaps();
+        this.computeNormals();
     }
 
     get width(): number {
@@ -220,6 +221,8 @@ class Water extends GLResource {
         this._normalsTex = textures[2];
         this._heightmapsTex = [textures[0], textures[1]];
         this._currIndex = 0;
+
+        this.computeNormals();
     }
 }
 
