@@ -63,7 +63,7 @@ class Caustics extends GLResource {
 
         shader.u["uWater"].value = water.heightmap;
         shader.u["uNormals"].value = water.normalmap;
-        shader.u["uAmplitude"].value = amplitude;
+        shader.u["uAmplitude"].value = 0.1 * amplitude;
         shader.u["uWaterLevel"].value = waterLevel;
         shader.u["uEta"].value = eta;
 

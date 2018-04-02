@@ -4,7 +4,7 @@ import Water from "./water";
 import Viewer from "./viewer/viewer";
 import Viewer2D from "./viewer/viewer2D";
 import Viewer3D from "./viewer/viewer3D";
-
+import ViewerCommon from "./viewer/viewerCommon";
 import * as Controls from "./controls";
 
 /** Initializes a WebGL context */
@@ -38,8 +38,9 @@ function main() {
 
     const side = 512;
     const water: Water = new Water(gl, side, side);
-    const viewer2D: Viewer2D = new Viewer2D(gl);
-    const viewer3D: Viewer3D = new Viewer3D(gl);
+    const viewerCommon: ViewerCommon = new ViewerCommon(gl, 512, "rc/tile.png");
+    const viewer2D: Viewer2D = new Viewer2D(gl, viewerCommon);
+    const viewer3D: Viewer3D = new Viewer3D(gl, viewerCommon);
 
     Controls.bind(canvas, water, viewer2D, viewer3D);
 
@@ -72,10 +73,13 @@ function main() {
         water.update(dt);
 
         /* Drawing */
+        if (viewer.caustics) {
+            viewerCommon.caustics.compute(water, viewer.amplitude, viewer.waterLevel, viewer.eta);
+        }
+
         FBO.bindDefault(gl);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        viewer.display(water);
+        viewer.display(water, viewerCommon);
 
         requestAnimationFrame(mainLoop);
     }

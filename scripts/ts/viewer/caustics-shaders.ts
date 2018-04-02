@@ -48,7 +48,7 @@ void main(void)
 
     float variation = sourceArea / refractedArea;
 
-    gl_FragColor = .2 * vec4(variation - 0.75);
+    gl_FragColor = 0.5 + .9 * vec4(variation - 1.0);
 }`;
 
 function buildCausticsShader(gl: WebGLRenderingContext): Shader {

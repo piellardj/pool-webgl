@@ -28,21 +28,21 @@ float getFresnelFactor(const vec3 normal, const vec3 fromEye)
 
 vec3 getTileColor(const vec2 coords)
 {
-    if (any(lessThan(coords, vec2(0))) || any(greaterThan(coords, vec2(1)))) {
-        return vec3(0);
-    }
-
     return texture2D(uTileTexture, TILE_REPETITION * coords).rgb;
 }
 
 float getCaustics(const vec2 coords)
 {
-    return float(uShowCaustics) * texture2D(uCaustics, coords).r;
+    return mix(0.5, texture2D(uCaustics, coords).r, float(uShowCaustics));
 }
 
 vec3 getFloorColor(const vec2 coords)
 {
-    return getTileColor(coords) + getCaustics(coords);
+    if (any(lessThan(coords, vec2(0))) || any(greaterThan(coords, vec2(1)))) {
+        return vec3(0);
+    }
+
+    return getTileColor(coords) * (0.5 + getCaustics(coords));
 }
 
 /* Floor color mixed with opacity.

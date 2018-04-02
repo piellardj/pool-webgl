@@ -1,5 +1,6 @@
 import GLResource from "../gl-utils/gl-resource";
 import Water from "../water";
+import ViewerCommon from "./viewerCommon";
 
 abstract class Viewer extends GLResource {
     private _showSpecular: boolean;
@@ -16,7 +17,7 @@ abstract class Viewer extends GLResource {
     public freeGLResources(): void {
     }
 
-    public abstract display(water: Water): void;
+    public abstract display(water: Water, common: ViewerCommon): void;
 
     public abstract interact(water: Water): void;
 

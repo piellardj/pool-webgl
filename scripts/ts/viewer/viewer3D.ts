@@ -1,4 +1,5 @@
 import Viewer from "./viewer";
+import ViewerCommon from "./viewerCommon";
 import Water from "../water";
 import Caustics from "./caustics";
 import Shader from "../gl-utils/shader";
@@ -9,8 +10,6 @@ import { mouse } from "../controls";
 class Viewer3D extends Viewer {
     private _vertices: WebGLBuffer;
     private _normals: WebGLBuffer;
-
-    private _tileTexture: WebGLTexture;
 
     private _pMatrix;
     private _mvMatrix;
@@ -28,9 +27,7 @@ class Viewer3D extends Viewer {
     private _gridVertices: WebGLBuffer;
     private _gridIndices: WebGLBuffer;
 
-    private _caustics: Caustics;
-
-    constructor(gl: WebGLRenderingContext) {
+    constructor(gl: WebGLRenderingContext, common: ViewerCommon) {
         function isPowerOf2(n) {
             if (typeof n !== 'number')
                 return 'Not a number';
@@ -43,33 +40,16 @@ class Viewer3D extends Viewer {
         this._distance = 1;
         this._angle = 0;
 
-        this._caustics = new Caustics(gl, 512, 512);
-
-        /* Texture */
-        this._tileTexture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this._tileTexture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
-        const tileTexture = this._tileTexture;
-
-        const tileImg = new Image();
-        tileImg.onload = function () {
-            gl.bindTexture(gl.TEXTURE_2D, tileTexture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tileImg);
-
-            if (isPowerOf2(tileImg.width) && isPowerOf2(tileImg.height)) {
-                gl.generateMipmap(gl.TEXTURE_2D);
-            } else {
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            }
-        };
-        tileImg.src = "rc/tile.png";
-
         const n = 256;
         this.initSurface(n, n);
 
         this.init();
+
+        const shaders = [this._sidesShader, this._surfaceShader];
+        for (let shader of shaders) {
+            shader.u["uTileTexture"].value = common.tileTexture;
+            shader.u["uCaustics"].value = common.caustics.texture;
+        }
     }
 
     private get eyePos(): number[] {
@@ -142,7 +122,6 @@ class Viewer3D extends Viewer {
     public freeGLResources(): void {
         const gl = super.gl; //shortcut
 
-        gl.deleteTexture(this._tileTexture);
         gl.deleteBuffer(this._vertices);
         gl.deleteBuffer(this._normals);
         this._sidesShader.freeGLResources();
@@ -150,24 +129,18 @@ class Viewer3D extends Viewer {
 
         gl.deleteBuffer(this._gridVertices);
         gl.deleteBuffer(this._gridIndices);
-        this._caustics.freeGLResources();
     }
 
-    public display(water: Water): void {
+    public display(water: Water, common: ViewerCommon): void {
         const gl = super.gl; //shortcut
 
         /* Update camera position */
-        //this._angle += 0.005;
+        this._angle += 0.005;
         this.updateViewMatrix();
 
         const eyePos = this.eyePos;
         this._sidesShader.u["uEyePos"].value = eyePos;
         this._surfaceShader.u["uEyePos"].value = eyePos;
-
-        if (this.caustics) {
-            this._caustics.compute(water, this.amplitude, this.waterLevel, this.eta);
-            FBO.bindDefault(super.gl);
-        }
 
         /* Actual displaying */
         gl.enable(gl.CULL_FACE);
@@ -185,8 +158,6 @@ class Viewer3D extends Viewer {
         const shader = this._sidesShader;
 
         shader.u["uWater"].value = water.heightmap;
-        shader.u["uCaustics"].value = this._caustics.texture;
-        shader.u["uTileTexture"].value = this._tileTexture;
 
         shader.use();
         shader.bindUniforms();
@@ -212,8 +183,6 @@ class Viewer3D extends Viewer {
         const shader = this._surfaceShader;
 
         shader.u["uWater"].value = water.heightmap;
-        shader.u["uCaustics"].value = this._caustics.texture;
-        shader.u["uTileTexture"].value = this._tileTexture;
         shader.u["uNormals"].value = water.normalmap;
 
         shader.use();
@@ -335,7 +304,7 @@ class Viewer3D extends Viewer {
     }
 
     protected updateAmplitude(): void {
-        const amplitude = 200 * this.amplitude;
+        const amplitude = 5 * this.amplitude;
         this._sidesShader.u["uAmplitude"].value = amplitude;
         this._surfaceShader.u["uAmplitude"].value = amplitude;
     }

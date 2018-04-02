@@ -50,8 +50,8 @@ void main(void)
 
     vec3 tileColor = texture2D(uTileTexture, TILE_REPETITION * coordsOnFloor).rgb;
     float caustics = texture2D(uCaustics, coordsOnFloor).r;
-    caustics = caustics * float(uShowCaustics);
-    vec3 floorColor = tileColor * (1.0 + caustics);
+    caustics = mix(0.5, caustics, float(uShowCaustics));
+    vec3 floorColor = tileColor * (0.5 + caustics);
 
     float opacity = clamp(uOpacity * length(refracted), 0.0, 1.0);
     vec3 color = mix(floorColor, WATER_COLOR, opacity);
