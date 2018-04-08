@@ -6,6 +6,7 @@ import Shader from "../gl-utils/shader";
 import FBO from "../gl-utils/fbo";
 import * as ShadersBuilder from "./viewer3D-shaders";
 import { mouse } from "../controls";
+import { Mouse, MoveCallback } from "../mouse";
 
 class Viewer3D extends Viewer {
     private _vertices: WebGLBuffer;
@@ -16,7 +17,8 @@ class Viewer3D extends Viewer {
     private _mvpMatrix;
 
     private _distance: number;
-    private _angle: number;
+    private _theta: number;
+    private _phi: number;
 
     private _sidesShader: Shader;
     private _surfaceShader: Shader;
@@ -37,8 +39,9 @@ class Viewer3D extends Viewer {
 
         super(gl);
 
-        this._distance = 1;
-        this._angle = 0;
+        this._distance = 1.7;
+        this._theta = 0;
+        this._phi = 0.5;
 
         const n = 256;
         this.initSurface(n, n);
@@ -50,13 +53,30 @@ class Viewer3D extends Viewer {
             shader.u["uTileTexture"].value = common.tileTexture;
             shader.u["uCaustics"].value = common.caustics.texture;
         }
+
+        const minPhi = 0.000001, maxPhi = 1.2;
+        const viewer = this;
+        const moveCamera: MoveCallback = (m: Mouse, mvt: number[], relMvt: number[]) => {
+            if (mouse.pressed) {
+                viewer._theta -= 2 * 3.14159 * relMvt[0];
+                viewer._phi += 2 * relMvt[1];
+                viewer._phi = Math.min(maxPhi, Math.max(minPhi, viewer._phi));
+            }
+        }
+        mouse.addMoveCallback(moveCamera);
     }
 
     private get eyePos(): number[] {
+        const to = [0, 0, this.waterLevel - .5];
+
         return [
-            this._distance * Math.cos(this._angle),
-            this._distance * Math.sin(this._angle),
-            this.waterLevel + .8];
+            to[0] + this._distance * Math.sin(this._phi) * Math.cos(this._theta),
+            to[1] + this._distance * Math.sin(this._phi) * Math.sin(this._theta),
+            to[2] + this._distance * Math.cos(this._phi)];
+        // return [
+        //     this._distance * Math.cos(this._theta),
+        //     this._distance * Math.sin(this._theta),
+        //     this.waterLevel + .8];
     }
 
     private updateViewMatrix(): void {
@@ -135,7 +155,9 @@ class Viewer3D extends Viewer {
         const gl = super.gl; //shortcut
 
         /* Update camera position */
-        this._angle += 0.005;
+        //this._theta += 0.005;
+        //this._theta = mouse.pos[0];
+
         this.updateViewMatrix();
 
         const eyePos = this.eyePos;
