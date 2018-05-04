@@ -7,18 +7,15 @@ import FBO from "../gl-utils/fbo";
 import * as ShadersBuilder from "./viewer3D-shaders";
 import { mouse } from "../controls";
 import { Mouse, MoveCallback } from "../mouse";
+import OrbitalCamera from "../orbitalCamera";
 
 class Viewer3D extends Viewer {
     private _vertices: WebGLBuffer;
     private _normals: WebGLBuffer;
 
     private _pMatrix;
-    private _mvMatrix;
     private _mvpMatrix;
-
-    private _distance: number;
-    private _theta: number;
-    private _phi: number;
+    private _camera: OrbitalCamera;
 
     private _sidesShader: Shader;
     private _surfaceShader: Shader;
@@ -39,9 +36,13 @@ class Viewer3D extends Viewer {
 
         super(gl);
 
-        this._distance = 1.7;
-        this._theta = 0;
-        this._phi = 0.5;
+        this._pMatrix = mat4.create();
+        this._mvpMatrix = mat4.create();
+        mat4.perspective(this._pMatrix, 45, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
+
+        this._camera = new OrbitalCamera([0, 0, this.waterLevel - .5], 2);
+        this._camera.theta = 0;
+        this._camera.phi = 0.5;
 
         const n = 256;
         this.initSurface(n, n);
@@ -58,34 +59,17 @@ class Viewer3D extends Viewer {
         const viewer = this;
         const moveCamera: MoveCallback = (m: Mouse, mvt: number[], relMvt: number[]) => {
             if (mouse.pressed) {
-                viewer._theta -= 2 * 3.14159 * relMvt[0];
-                viewer._phi += 2 * relMvt[1];
-                viewer._phi = Math.min(maxPhi, Math.max(minPhi, viewer._phi));
+                viewer._camera.theta -= 2 * 3.14159 * relMvt[0];
+                viewer._camera.phi += 2 * relMvt[1];
+                viewer._camera.phi = Math.min(maxPhi, Math.max(minPhi, viewer._camera.phi));
+                viewer.updateMVPMatrix();
             }
         }
         mouse.addMoveCallback(moveCamera);
     }
 
-    private get eyePos(): number[] {
-        const to = [0, 0, this.waterLevel - .5];
-
-        return [
-            to[0] + this._distance * Math.sin(this._phi) * Math.cos(this._theta),
-            to[1] + this._distance * Math.sin(this._phi) * Math.sin(this._theta),
-            to[2] + this._distance * Math.cos(this._phi)];
-        // return [
-        //     this._distance * Math.cos(this._theta),
-        //     this._distance * Math.sin(this._theta),
-        //     this.waterLevel + .8];
-    }
-
-    private updateViewMatrix(): void {
-        const from = this.eyePos;
-        const to = [0, 0, this.waterLevel - .5];
-        const up = [0, 0, 1];
-        mat4.lookAt(this._mvMatrix, from, to, up);
-
-        mat4.multiply(this._mvpMatrix, this._pMatrix, this._mvMatrix);
+    private updateMVPMatrix(): void {
+        mat4.multiply(this._mvpMatrix, this._pMatrix, this._camera.viewMatrix);
     }
 
     public initSurface(w: number, h: number): void {
@@ -155,14 +139,8 @@ class Viewer3D extends Viewer {
         const gl = super.gl; //shortcut
 
         /* Update camera position */
-        //this._theta += 0.005;
-        //this._theta = mouse.pos[0];
-
-        this.updateViewMatrix();
-
-        const eyePos = this.eyePos;
-        this._sidesShader.u["uEyePos"].value = eyePos;
-        this._surfaceShader.u["uEyePos"].value = eyePos;
+        this._sidesShader.u["uEyePos"].value = this._camera.eyePos;
+        this._surfaceShader.u["uEyePos"].value = this._camera.eyePos;
 
         /* Actual displaying */
         gl.enable(gl.CULL_FACE);
@@ -227,19 +205,11 @@ class Viewer3D extends Viewer {
     private init() {
         const gl = super.gl; //shortcut
 
-        this._pMatrix = mat4.create();
-        mat4.perspective(this._pMatrix, 45, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
-
-        this._mvMatrix = mat4.create();
-        this._mvpMatrix = mat4.create();
-
         this._sidesShader = ShadersBuilder.buildSidesShader(gl);
-        this._sidesShader.u["uMVMatrix"].value = this._mvMatrix;
-        this._sidesShader.u["uPMatrix"].value = this._pMatrix;
+        this._sidesShader.u["uMVPMatrix"].value = this._mvpMatrix;
 
         this._surfaceShader = ShadersBuilder.buildSurfaceShader(gl);
-        this._surfaceShader.u["uMVMatrix"].value = this._mvMatrix;
-        this._surfaceShader.u["uPMatrix"].value = this._pMatrix;
+        this._surfaceShader.u["uMVPMatrix"].value = this._mvpMatrix;
 
         /* Buffer data */
         {
@@ -334,6 +304,8 @@ class Viewer3D extends Viewer {
     protected updateWaterLevel(): void {
         this._sidesShader.u["uWaterLevel"].value = this.waterLevel;
         this._surfaceShader.u["uWaterLevel"].value = this.waterLevel;
+        this._camera.focusPoint = [0, 0, this.waterLevel - .5];
+        this.updateMVPMatrix();
     }
 
     protected updateOpacity(): void {
