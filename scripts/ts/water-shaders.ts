@@ -164,8 +164,8 @@ vec3 computeNormal(vec2 coords)
                 decodeHeight(texture2D(uWater, coords - vec2(0, uTexelSize.y)));
     
     vec3 normal = cross(vec3(uTexelSize.x, 0, dZx), vec3(0, uTexelSize.y, dZy));
-    normal.xy /= HEIGHT_RANGE;
-    
+    normal.xy *= 0.4 * HEIGHT_RANGE;
+
     return normalize(normal);
 }
 
