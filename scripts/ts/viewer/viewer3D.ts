@@ -40,9 +40,9 @@ class Viewer3D extends Viewer {
         this._mvpMatrix = mat4.create();
         mat4.perspective(this._pMatrix, 45, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
 
-        this._camera = new OrbitalCamera([0, 0, this.waterLevel - .5], 2);
+        this._camera = new OrbitalCamera([0, 0, this.waterLevel - .5], 1.7);
         this._camera.theta = 0;
-        this._camera.phi = 0.5;
+        this._camera.phi = 0.8;
 
         const n = 256;
         this.initSurface(n, n);
