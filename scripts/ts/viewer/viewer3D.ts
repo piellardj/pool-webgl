@@ -316,6 +316,11 @@ class Viewer3D extends Viewer {
     protected updateEta(): void {
         this._sidesShader.u["uEta"].value = this.eta;
         this._surfaceShader.u["uEta"].value = this.eta;
+
+        let F0 = (1 - this.eta) / (1 + this.eta);
+        F0 = F0 * F0;
+        this._sidesShader.u["uF0"].value = F0;
+        this._surfaceShader.u["uF0"].value = F0;
     }
 }
 
