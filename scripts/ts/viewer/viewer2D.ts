@@ -50,7 +50,8 @@ class Viewer2D extends Viewer {
 
     public interact(water: Water): void {
         if (mouse.pressed) {
-            water.touch(mouse.pos[0] * water.width, mouse.pos[1] * water.height, 8);
+            const p = mouse.relativePos;
+            water.touch(p[0] * water.width, p[1] * water.height, 8);
         }
     }
 
