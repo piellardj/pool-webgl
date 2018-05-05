@@ -13,8 +13,8 @@ class Viewer3D extends Viewer {
     private _vertices: WebGLBuffer;
     private _normals: WebGLBuffer;
 
-    private _pMatrix;
-    private _mvpMatrix;
+    private _pMatrix: number[];
+    private _mvpMatrix: number[];
     private _camera: OrbitalCamera;
 
     private _sidesShader: Shader;
