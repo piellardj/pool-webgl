@@ -6,6 +6,8 @@ const waterCommonStr: string =
 uniform sampler2D uCaustics;
 uniform sampler2D uTileTexture;
 
+uniform vec3 uLightDir; //normalized
+
 uniform float uF0;
 uniform float uEta;
 uniform float uOpacity;
@@ -68,9 +70,7 @@ vec3 getReflectedColor(const vec3 dir)
 
 vec4 getSpecular(const vec3 reflected)
 {
-    const vec3 toLight = vec3(-0.447, 0, 0.894);
-
-    float f = max(0.0, dot(toLight, reflected));
+    float f = max(0.0, dot(-uLightDir, reflected));
     f = pow(f, 200.0);
     f *= float(uSpecular);
 

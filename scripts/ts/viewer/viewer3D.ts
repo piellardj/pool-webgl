@@ -16,6 +16,7 @@ class Viewer3D extends Viewer {
     private _pMatrix: number[];
     private _mvpMatrix: number[];
     private _camera: OrbitalCamera;
+    private _lightDirection: number[];
 
     private _sidesShader: Shader;
     private _surfaceShader: Shader;
@@ -44,6 +45,9 @@ class Viewer3D extends Viewer {
         this._camera.theta = 0;
         this._camera.phi = 0.8;
 
+        this._lightDirection = vec3.fromValues(1, 0, -1);
+        vec3.normalize(this._lightDirection, this._lightDirection);
+
         const n = 256;
         this.initSurface(n, n);
 
@@ -53,6 +57,7 @@ class Viewer3D extends Viewer {
         for (let shader of shaders) {
             shader.u["uTileTexture"].value = common.tileTexture;
             shader.u["uCaustics"].value = common.caustics.texture;
+            shader.u["uLightDir"].value = this._lightDirection;
         }
 
         const minPhi = 0.000001, maxPhi = 1.2;
