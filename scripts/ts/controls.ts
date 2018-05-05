@@ -3,11 +3,7 @@ import Viewer2D from "./viewer/viewer2D";
 import Viewer3D from "./viewer/viewer3D";
 import { Mouse } from "./mouse";
 
-let mouse: Mouse = new Mouse(document.body);
-
-function bindMouse(canvas: HTMLCanvasElement): void {
-    mouse = new Mouse(canvas);
-}
+let mouse: Mouse = new Mouse(document.getElementById("glcanvas"));
 
 function bindControls(water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): void {
     function bindInput(element: HTMLElement, func, input: string) {
@@ -105,7 +101,6 @@ function bindControls(water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): voi
 
 function bind(canvas: HTMLCanvasElement, water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): void {
     bindControls(water, viewer2D, viewer3D);
-    bindMouse(canvas);
 }
 
 function bindRendererChooser(choose2D, choose3D) {
