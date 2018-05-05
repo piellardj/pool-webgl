@@ -6,7 +6,7 @@ import Shader from "../gl-utils/shader";
 import FBO from "../gl-utils/fbo";
 import * as ShadersBuilder from "./viewer3D-shaders";
 import { mouse } from "../controls";
-import { Mouse, MoveCallback } from "../mouse";
+import { Mouse, MoveCallback, WheelCallback} from "../mouse";
 import OrbitalCamera from "../orbitalCamera";
 
 declare const mat4: any;
@@ -60,13 +60,22 @@ class Viewer3D extends Viewer {
         const viewer = this;
         const moveCamera: MoveCallback = (m: Mouse, mvt: number[], relMvt: number[]) => {
             if (mouse.pressed) {
-                viewer._camera.theta -= 2 * 3.14159 * relMvt[0];
-                viewer._camera.phi += 2 * relMvt[1];
+                viewer._camera.theta -= 0.5 * 2 * 3.14159 * relMvt[0];
+                viewer._camera.phi += 0.5 * 2 * relMvt[1];
                 viewer._camera.phi = Math.min(maxPhi, Math.max(minPhi, viewer._camera.phi));
                 viewer.updateMVPMatrix();
             }
         }
         mouse.addMoveCallback(moveCamera);
+
+        const minDist = 1.5, maxDist = 3;
+        const changeDist: WheelCallback = (m: Mouse, delta: number) => {
+            let d = viewer._camera.distance + delta * 0.02;
+            d = Math.min(maxDist, Math.max(minDist, d));
+            viewer._camera.distance = d;
+            viewer.updateMVPMatrix();
+        }
+        mouse.addWheelCallback(changeDist);
     }
 
     private updateMVPMatrix(): void {
