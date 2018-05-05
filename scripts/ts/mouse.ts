@@ -51,8 +51,6 @@ class Mouse {
         };
 
         const mouseWheel = (e: WheelEvent) => {
-            e.preventDefault();
-
             if (e.ctrlKey && mouse.isInElt) {
                e.preventDefault();
 
