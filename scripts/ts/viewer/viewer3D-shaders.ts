@@ -6,8 +6,8 @@ const waterCommonStr: string =
 uniform sampler2D uCaustics;
 uniform sampler2D uTileTexture;
 
+uniform float uF0;
 uniform float uEta;
-uniform float uF0; // = ((1.0 - uEta) / (1.0 + uEta))^2
 uniform float uOpacity;
 uniform bool uSpecular;
 uniform bool uShowCaustics;
@@ -20,7 +20,7 @@ const float TILE_REPETITION = 4.0;
 * Arguments expected to be normalized. */
 float getFresnelFactor(const vec3 normal, const vec3 fromEye)
 {
-    return mix(pow(1.0 + dot(normal,fromEye), 5.0), 1.0, uF0);
+    return mix(pow(1.0 - dot(normal,-fromEye), 5.0), 1.0, uF0);
 }
 
 vec3 getTileColor(const vec2 coords)
@@ -68,9 +68,9 @@ vec3 getReflectedColor(const vec3 dir)
 
 vec4 getSpecular(const vec3 reflected)
 {
-    vec3 fromLight = normalize(vec3(1,0,-2));
+    const vec3 toLight = vec3(-0.447, 0, 0.894);
 
-    float f = max(0.0, dot(-fromLight, reflected));
+    float f = max(0.0, dot(toLight, reflected));
     f = pow(f, 200.0);
     f *= float(uSpecular);
 
@@ -149,8 +149,8 @@ void main(void)
     }
 
     vec3 fromEye = normalize(vPosition - uEyePos);
-    vec3 normal = normalize(vec3(vNormal, 0)); //already normalized
-
+    vec3 normal = vec3(vNormal, 0); //already normalized
+    
     vec3 color = computeColor(vPosition, fromEye, normal);
 
     gl_FragColor = vec4(color, 1);
