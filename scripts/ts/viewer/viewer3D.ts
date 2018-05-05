@@ -9,8 +9,8 @@ import { mouse } from "../controls";
 import { Mouse, MoveCallback } from "../mouse";
 import OrbitalCamera from "../orbitalCamera";
 
-declare var mat4: any;
-declare var vec3: any;
+declare const mat4: any;
+declare const vec3: any;
 
 class Viewer3D extends Viewer {
     private _vertices: WebGLBuffer;

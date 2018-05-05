@@ -1,4 +1,4 @@
-declare var mat4: any;
+declare const mat4: any;
 
 class OrbitalCamera {
     private _focus: number[];
