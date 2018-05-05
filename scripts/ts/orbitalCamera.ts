@@ -1,3 +1,5 @@
+declare var mat4: any;
+
 class OrbitalCamera {
     private _focus: number[];
     private _distance: number;
