@@ -56,7 +56,7 @@ void main(void)
     float opacity = clamp(uOpacity * length(refracted), 0.0, 1.0);
     vec3 color = mix(floorColor, WATER_COLOR, opacity);
 
-    const vec3 fromLight = normalize(vec3(.05, -.1, -1));
+    const vec3 fromLight = normalize(vec3(.05, -.1, -.8));
     vec3 reflected = reflect(fromLight, normal);
     float specular = max(0.0, dot(reflected, -fromEye));
     specular = pow(specular, 1000.0) * float(uShowSpecular);
