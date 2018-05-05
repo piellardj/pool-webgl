@@ -68,9 +68,9 @@ class OrbitalCamera {
         const sin = Math.sin;
         const cos = Math.cos;
 
-        this._eyePos[0] = this.distance * (this.focusPoint[0] + sin(this.phi) * cos(this.theta));
-        this._eyePos[1] = this.distance * (this.focusPoint[1] + sin(this.phi) * sin(this.theta));
-        this._eyePos[2] = this.distance * (this.focusPoint[2] + cos(this.phi));
+        this._eyePos[0] = this.focusPoint[0] + this.distance * (sin(this.phi) * cos(this.theta));
+        this._eyePos[1] = this.focusPoint[1] + this.distance * (sin(this.phi) * sin(this.theta));
+        this._eyePos[2] = this.focusPoint[2] + this.distance * (cos(this.phi));
 
         this._viewMatrix = mat4.lookAt(this._viewMatrix, this.eyePos, this.focusPoint, [0, 0, 1]);
     }
