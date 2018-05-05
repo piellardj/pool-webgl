@@ -5,6 +5,7 @@ import ViewerCommon from "./viewerCommon";
 abstract class Viewer extends GLResource {
     private _showSpecular: boolean;
     private _showCaustics: boolean;
+    private _useFresnel: boolean;
     private _amplitude: number;
     private _waterLevel: number;
     private _opacity: number;
@@ -23,6 +24,7 @@ abstract class Viewer extends GLResource {
 
     protected abstract updateSpecular(): void;
     protected abstract updateCaustics(): void;
+    protected abstract updateFresnel(): void;
     protected abstract updateAmplitude(): void;
     protected abstract updateWaterLevel(): void;
     protected abstract updateOpacity(): void;
@@ -42,6 +44,14 @@ abstract class Viewer extends GLResource {
     }
     get caustics(): boolean {
         return this._showCaustics;
+    }
+
+    set fresnel(b: boolean) {
+        this._useFresnel = b;
+        this.updateFresnel();
+    }
+    get fresnel(): boolean {
+        return this._useFresnel;
     }
 
     set amplitude(a: number) {

@@ -66,6 +66,14 @@ function bindControls(water: Water, viewer2D: Viewer2D, viewer3D: Viewer3D): voi
         bindInput(causticsCheckbox, updateCaustics, "change");
     }
     {
+        const fresnelCheckbox: HTMLInputElement = document.getElementById("fresnel-checkbox") as HTMLInputElement;
+        const updateSpecular = () => {
+            viewer2D.fresnel = fresnelCheckbox.checked;
+            viewer3D.fresnel = fresnelCheckbox.checked;
+        };
+        bindInput(fresnelCheckbox, updateSpecular, "change");
+    }
+    {
         const amplitudeSlider: HTMLInputElement = document.getElementById("amplitude-slider") as HTMLInputElement;
         const updateAmplitude = () => {
             viewer2D.amplitude = +amplitudeSlider.value;

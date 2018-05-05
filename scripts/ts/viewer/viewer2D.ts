@@ -62,6 +62,9 @@ class Viewer2D extends Viewer {
         this._displayShader.u["uShowCaustics"].value = this.caustics;
     }
 
+    protected updateFresnel(): void {
+    }
+
     protected updateAmplitude(): void {
         this._displayShader.u["uAmplitude"].value = this.amplitude;
     }

@@ -13,6 +13,7 @@ uniform float uEta;
 uniform float uOpacity;
 uniform bool uSpecular;
 uniform bool uShowCaustics;
+uniform bool uFresnel;
 
 const vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);
 const vec3 SPECULAR_COLOR = vec3(1);
@@ -22,7 +23,8 @@ const float TILE_REPETITION = 4.0;
 * Arguments expected to be normalized. */
 float getFresnelFactor(const vec3 normal, const vec3 fromEye)
 {
-    return mix(pow(1.0 - dot(normal,-fromEye), 5.0), 1.0, uF0);
+    float computed = mix(pow(1.0 - dot(normal,-fromEye), 5.0), 1.0, uF0);
+    return min(float(uFresnel), computed);
 }
 
 vec3 getTileColor(const vec2 coords)

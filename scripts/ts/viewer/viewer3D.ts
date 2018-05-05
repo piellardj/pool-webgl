@@ -305,6 +305,11 @@ class Viewer3D extends Viewer {
         this._surfaceShader.u["uShowCaustics"].value = this.caustics;
     }
 
+    protected updateFresnel(): void {
+        this._sidesShader.u["uFresnel"].value = this.fresnel;
+        this._surfaceShader.u["uFresnel"].value = this.fresnel;
+    }
+
     protected updateAmplitude(): void {
         const amplitude = 5 * this.amplitude;
         this._sidesShader.u["uAmplitude"].value = amplitude;
