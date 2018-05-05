@@ -28,13 +28,6 @@ class Viewer3D extends Viewer {
     private _gridIndices: WebGLBuffer;
 
     constructor(gl: WebGLRenderingContext, common: ViewerCommon) {
-        function isPowerOf2(n) {
-            if (typeof n !== 'number')
-                return 'Not a number';
-
-            return n && (n & (n - 1)) === 0;
-        }
-
         super(gl);
 
         this._pMatrix = mat4.create();
