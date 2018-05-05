@@ -54,10 +54,27 @@ vec3 getRefractedColor(const vec3 entryPoint, vec3 refracted)
 
     refracted *= -entryPoint.z / refracted.z;
 
-    vec2 groundCoords = entryPoint.xy + .5 + refracted.xy;
-    vec3 floorColor = getFloorColor(groundCoords);
+    vec2 groundCoords = entryPoint.xy + refracted.xy;
+    vec3 floorColor = getFloorColor(groundCoords + .5);
 
-    float opacity = uOpacity * length(refracted);
+    /*float f = 1.0;
+
+    if (groundCoords.x < -.5) {
+        f = min(f, abs((-.5 - entryPoint.x) / (groundCoords.x - entryPoint.x)));
+    }
+    if (groundCoords.x > .5) {
+        f = min(f, abs((.5 - entryPoint.x) / (groundCoords.x - entryPoint.x)));
+    }
+    if (groundCoords.y < -.5) {
+        f = min(f, abs((-.5 - entryPoint.y) / (groundCoords.y - entryPoint.y)));
+    }
+    if (groundCoords.y > .5) {
+        f = min(f, abs((.5 - entryPoint.y) / (groundCoords.y - entryPoint.y)));
+    }
+
+    refracted *= f;*/
+
+    float opacity = uOpacity * entryPoint.z;//length(refracted);
     opacity = clamp(opacity, 0.0, 1.0);
 
     return mix(floorColor, WATER_COLOR, opacity);
