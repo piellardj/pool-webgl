@@ -1,5 +1,5 @@
 {
-  "name": "navier-stokes-webgl",
+  "name": "pool-webgl",
   "version": "1.0.0",
   "description": "Water simulation running on GPU",
   "main": "main.js",
