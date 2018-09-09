@@ -64,13 +64,9 @@ function main() {
         instantFPS = 1 / dt;
         lastUpdate = time;
 
-        /* If the javascript was paused (tab lost focus), the dt may be too big.
-         * In that case we adjust it so the simulation resumes correctly. */
-        dt = Math.min(dt, 1 / 10);
-
         /* Updating */
         viewer.interact(water);
-        water.update(dt);
+        water.update(1 / 60);
 
         /* Drawing */
         if (viewer.caustics) {
