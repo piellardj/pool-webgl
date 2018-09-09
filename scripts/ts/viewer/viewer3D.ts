@@ -68,9 +68,9 @@ class Viewer3D extends Viewer {
         }
         mouse.addMoveCallback(moveCamera);
 
-        const minDist = 1.5, maxDist = 3;
+        const minDist = 1.42, maxDist = 3;
         const changeDist: WheelCallback = (m: Mouse, delta: number) => {
-            let d = viewer._camera.distance + delta * 0.02;
+            let d = viewer._camera.distance + delta * 0.002;
             d = Math.min(maxDist, Math.max(minDist, d));
             viewer._camera.distance = d;
             viewer.updateMVPMatrix();

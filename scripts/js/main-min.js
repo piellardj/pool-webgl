@@ -1588,10 +1588,10 @@ var Viewer3D = function (_Viewer) {
             }
         };
         __WEBPACK_IMPORTED_MODULE_2__controls__["c" /* mouse */].addMoveCallback(moveCamera);
-        var minDist = 1.5,
+        var minDist = 1.42,
             maxDist = 3;
         var changeDist = function changeDist(m, delta) {
-            var d = viewer._camera.distance + delta * 0.02;
+            var d = viewer._camera.distance + delta * 0.002;
             d = Math.min(maxDist, Math.max(minDist, d));
             viewer._camera.distance = d;
             viewer.updateMVPMatrix();
