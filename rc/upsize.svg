@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="-8 -8 16 16">
+    <defs>
+        <g id="arrow">
+            <path d="M 2 6 L 6 6 L 6 2 M 6 6 L 1 1" stroke="white" stroke-width="1" fill="none"/>
+        </g>
+    </defs>
+
+    <use href="#arrow" transform="rotate(90)"/>
+    <use href="#arrow" transform="rotate(270)"/>
+</svg>
