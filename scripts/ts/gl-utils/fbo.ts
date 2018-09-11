@@ -1,5 +1,5 @@
 import GLResource from "./gl-resource";
-
+import Viewport from "./viewport";
 
 class FBO extends GLResource {
     id: WebGLFramebuffer;
@@ -32,9 +32,15 @@ class FBO extends GLResource {
         }
     }
 
-    public static bindDefault(gl: WebGLRenderingContext): void {
+    public static bindDefault(gl: WebGLRenderingContext, viewport: Viewport=null): void {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+
+        if (viewport === null) {
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        } else {
+            gl.viewport(viewport.left, viewport.lower, viewport.width, viewport.height);
+        }
+
     }
 
     public freeGLResources(): void {

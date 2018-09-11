@@ -4,11 +4,13 @@ import Water from "../water";
 import Caustics from "./caustics";
 import Shader from "../gl-utils/shader";
 import FBO from "../gl-utils/fbo";
+import Viewport from "../gl-utils/viewport";
 import * as ShadersBuilder from "./viewer2D-shaders";
 import { mouse } from "../controls";
 
 class Viewer2D extends Viewer {
     private _displayShader: Shader;
+    private _viewport: Viewport;
 
     constructor(gl: WebGLRenderingContext, common: ViewerCommon) {
         function isPowerOf2(n) {
@@ -23,21 +25,35 @@ class Viewer2D extends Viewer {
         this._displayShader = ShadersBuilder.buildDisplayShader(gl);
         this._displayShader.u["uTileTexture"].value = common.tileTexture;
         this._displayShader.u["uCaustics"].value = common.caustics.texture;
+
+        this._viewport = new Viewport;
     }
 
     public freeGLResources(): void {
         this._displayShader.freeGLResources();
     }
 
+    private updateViewport(): void {
+        const gl = super.gl;
+        const side = Math.min(gl.drawingBufferWidth, gl.drawingBufferHeight);
+        
+        this._viewport.left = 0.5 * (gl.drawingBufferWidth - side);
+        this._viewport.lower = 0.5 * (gl.drawingBufferHeight - side);
+        this._viewport.width = side;
+        this._viewport.height = side;
+    }
+
     public display(water: Water, common: ViewerCommon): void {
         const gl = super.gl; //shortcut
+
+        this.updateViewport();
 
         gl.disable(gl.CULL_FACE);
         gl.disable(gl.DEPTH_TEST);
 
         const displayShader = this._displayShader;
 
-        FBO.bindDefault(gl);
+        FBO.bindDefault(gl, this._viewport);
 
         displayShader.u["uWater"].value = water.heightmap;
         displayShader.u["uNormals"].value = water.normalmap;
@@ -50,7 +66,12 @@ class Viewer2D extends Viewer {
 
     public interact(water: Water): void {
         if (mouse.pressed) {
-            const p = mouse.relativePos;
+            const p = mouse.pos;
+
+            this.updateViewport();
+            p[0] = (p[0] - this._viewport.left) / this._viewport.width;
+            p[1] = (p[1] - this._viewport.lower) / this._viewport.height;
+
             water.touch(p[0] * water.width, p[1] * water.height, 8);
         }
     }

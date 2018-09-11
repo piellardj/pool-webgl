@@ -30,6 +30,23 @@ function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
     return gl;
 }
 
+function addEventToResizeButton(): void {
+    const canvasContainer = document.getElementById("canvas-container") as HTMLElement;
+    const resizeButton = document.getElementById("resize-button") as HTMLElement;
+    resizeButton.addEventListener("click", function() {
+        canvasContainer.classList.toggle("fullscreen");
+
+        if (canvasContainer.classList.contains("fullscreen")) {
+            document.body.style.overflow = "hidden";
+        }
+        else {
+            document.body.style.overflow = "auto";
+        }
+    });
+}
+
+addEventToResizeButton();
+
 function main() {
     const canvas: HTMLCanvasElement = document.getElementById("glcanvas") as HTMLCanvasElement;
     const gl: WebGLRenderingContext = initGL(canvas, { alpha: false });
@@ -68,6 +85,8 @@ function main() {
         viewer.interact(water);
         water.update(1 / 60);
 
+        Utils.resizeCanvas(gl, false);
+        
         /* Drawing */
         if (viewer.caustics) {
             viewerCommon.caustics.compute(water, viewer.amplitude, viewer.waterLevel, viewer.eta);

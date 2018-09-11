@@ -149,8 +149,14 @@ var FBO = function (_GLResource) {
     }], [{
         key: "bindDefault",
         value: function bindDefault(gl) {
+            var viewport = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+            if (viewport === null) {
+                gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+            } else {
+                gl.viewport(viewport.left, viewport.lower, viewport.width, viewport.height);
+            }
         }
     }]);
 
@@ -444,7 +450,7 @@ var ShaderProgram = function (_GLResource) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return mouse; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return bind; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return bindRendererChooser; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mouse__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mouse__ = __webpack_require__(13);
 
 var mouse = new __WEBPACK_IMPORTED_MODULE_0__mouse__["a" /* Mouse */](document.getElementById("glcanvas"));
 function bindControls(water, viewer2D, viewer3D) {
@@ -774,8 +780,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_utils_fbo__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__water__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__viewer_viewer2D__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__viewer_viewer3D__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__viewer_viewerCommon__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__viewer_viewer3D__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__viewer_viewerCommon__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__controls__ = __webpack_require__(4);
 
 
@@ -802,6 +808,19 @@ function initGL(canvas, flags) {
     __WEBPACK_IMPORTED_MODULE_0__gl_utils_utils__["a" /* resizeCanvas */](gl, false);
     return gl;
 }
+function addEventToResizeButton() {
+    var canvasContainer = document.getElementById("canvas-container");
+    var resizeButton = document.getElementById("resize-button");
+    resizeButton.addEventListener("click", function () {
+        canvasContainer.classList.toggle("fullscreen");
+        if (canvasContainer.classList.contains("fullscreen")) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+    });
+}
+addEventToResizeButton();
 function main() {
     var canvas = document.getElementById("glcanvas");
     var gl = initGL(canvas, { alpha: false });
@@ -835,6 +854,7 @@ function main() {
         /* Updating */
         viewer.interact(water);
         water.update(1 / 60);
+        __WEBPACK_IMPORTED_MODULE_0__gl_utils_utils__["a" /* resizeCanvas */](gl, false);
         /* Drawing */
         if (viewer.caustics) {
             viewerCommon.caustics.compute(water, viewer.amplitude, viewer.waterLevel, viewer.eta);
@@ -1126,8 +1146,9 @@ var Water = function (_GLResource) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__viewer__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_utils_fbo__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__viewer2D_shaders__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__controls__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__gl_utils_viewport__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__viewer2D_shaders__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__controls__ = __webpack_require__(4);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -1137,6 +1158,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 
 
 
@@ -1156,9 +1178,10 @@ var Viewer2D = function (_Viewer) {
 
         var _this = _possibleConstructorReturn(this, (Viewer2D.__proto__ || Object.getPrototypeOf(Viewer2D)).call(this, gl));
 
-        _this._displayShader = __WEBPACK_IMPORTED_MODULE_2__viewer2D_shaders__["a" /* buildDisplayShader */](gl);
+        _this._displayShader = __WEBPACK_IMPORTED_MODULE_3__viewer2D_shaders__["a" /* buildDisplayShader */](gl);
         _this._displayShader.u["uTileTexture"].value = common.tileTexture;
         _this._displayShader.u["uCaustics"].value = common.caustics.texture;
+        _this._viewport = new __WEBPACK_IMPORTED_MODULE_2__gl_utils_viewport__["a" /* default */]();
         return _this;
     }
 
@@ -1168,13 +1191,24 @@ var Viewer2D = function (_Viewer) {
             this._displayShader.freeGLResources();
         }
     }, {
+        key: "updateViewport",
+        value: function updateViewport() {
+            var gl = _get(Viewer2D.prototype.__proto__ || Object.getPrototypeOf(Viewer2D.prototype), "gl", this);
+            var side = Math.min(gl.drawingBufferWidth, gl.drawingBufferHeight);
+            this._viewport.left = 0.5 * (gl.drawingBufferWidth - side);
+            this._viewport.lower = 0.5 * (gl.drawingBufferHeight - side);
+            this._viewport.width = side;
+            this._viewport.height = side;
+        }
+    }, {
         key: "display",
         value: function display(water, common) {
             var gl = _get(Viewer2D.prototype.__proto__ || Object.getPrototypeOf(Viewer2D.prototype), "gl", this); //shortcut
+            this.updateViewport();
             gl.disable(gl.CULL_FACE);
             gl.disable(gl.DEPTH_TEST);
             var displayShader = this._displayShader;
-            __WEBPACK_IMPORTED_MODULE_1__gl_utils_fbo__["a" /* default */].bindDefault(gl);
+            __WEBPACK_IMPORTED_MODULE_1__gl_utils_fbo__["a" /* default */].bindDefault(gl, this._viewport);
             displayShader.u["uWater"].value = water.heightmap;
             displayShader.u["uNormals"].value = water.normalmap;
             displayShader.use();
@@ -1184,8 +1218,11 @@ var Viewer2D = function (_Viewer) {
     }, {
         key: "interact",
         value: function interact(water) {
-            if (__WEBPACK_IMPORTED_MODULE_3__controls__["c" /* mouse */].pressed) {
-                var p = __WEBPACK_IMPORTED_MODULE_3__controls__["c" /* mouse */].relativePos;
+            if (__WEBPACK_IMPORTED_MODULE_4__controls__["c" /* mouse */].pressed) {
+                var p = __WEBPACK_IMPORTED_MODULE_4__controls__["c" /* mouse */].pos;
+                this.updateViewport();
+                p[0] = (p[0] - this._viewport.left) / this._viewport.width;
+                p[1] = (p[1] - this._viewport.lower) / this._viewport.height;
                 water.touch(p[0] * water.width, p[1] * water.height, 8);
             }
         }
@@ -1235,6 +1272,20 @@ var Viewer2D = function (_Viewer) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Viewport = function Viewport() {
+  _classCallCheck(this, Viewport);
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (Viewport);
+//# sourceMappingURL=viewport.js.map
+
+/***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return buildDisplayShader; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_utils_shader__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_utils_vbo__ = __webpack_require__(5);
@@ -1255,7 +1306,7 @@ function buildDisplayShader(gl) {
 //# sourceMappingURL=viewer2D-shaders.js.map
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1506,14 +1557,14 @@ var Mouse = function () {
 //# sourceMappingURL=mouse.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__viewer__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__viewer3D_shaders__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__viewer3D_shaders__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__controls__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__orbitalCamera__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__orbitalCamera__ = __webpack_require__(16);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -1601,8 +1652,15 @@ var Viewer3D = function (_Viewer) {
     }
 
     _createClass(Viewer3D, [{
+        key: "updatePMatrix",
+        value: function updatePMatrix() {
+            var canvas = _get(Viewer3D.prototype.__proto__ || Object.getPrototypeOf(Viewer3D.prototype), "gl", this).canvas;
+            mat4.perspective(this._pMatrix, 45, canvas.clientWidth / canvas.clientHeight, 0.1, 100.0);
+        }
+    }, {
         key: "updateMVPMatrix",
         value: function updateMVPMatrix() {
+            this.updatePMatrix();
             mat4.multiply(this._mvpMatrix, this._pMatrix, this._camera.viewMatrix);
         }
     }, {
@@ -1669,6 +1727,7 @@ var Viewer3D = function (_Viewer) {
             /* Update camera position */
             this._sidesShader.u["uEyePos"].value = this._camera.eyePos;
             this._surfaceShader.u["uEyePos"].value = this._camera.eyePos;
+            this.updateMVPMatrix();
             /* Actual displaying */
             gl.enable(gl.CULL_FACE);
             gl.enable(gl.DEPTH_TEST);
@@ -1799,7 +1858,7 @@ var Viewer3D = function (_Viewer) {
 //# sourceMappingURL=viewer3D.js.map
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1829,7 +1888,7 @@ function buildSurfaceShader(gl) {
 //# sourceMappingURL=viewer3D-shaders.js.map
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1915,12 +1974,12 @@ var OrbitalCamera = function () {
 //# sourceMappingURL=orbitalCamera.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_utils_gl_resource__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__caustics__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__caustics__ = __webpack_require__(18);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -1998,13 +2057,13 @@ var ViewerCommon = function (_GLResource) {
 //# sourceMappingURL=viewerCommon.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__gl_utils_gl_resource__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__gl_utils_fbo__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__caustics_shaders__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__caustics_shaders__ = __webpack_require__(19);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -2171,7 +2230,7 @@ var Caustics = function (_GLResource) {
 //# sourceMappingURL=caustics.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

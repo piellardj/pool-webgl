@@ -78,7 +78,13 @@ class Viewer3D extends Viewer {
         mouse.addWheelCallback(changeDist);
     }
 
+    private updatePMatrix(): void {
+      const canvas = super.gl.canvas;
+        mat4.perspective(this._pMatrix, 45, canvas.clientWidth / canvas.clientHeight, 0.1, 100.0);
+    }
+
     private updateMVPMatrix(): void {
+        this.updatePMatrix();
         mat4.multiply(this._mvpMatrix, this._pMatrix, this._camera.viewMatrix);
     }
 
@@ -151,6 +157,8 @@ class Viewer3D extends Viewer {
         /* Update camera position */
         this._sidesShader.u["uEyePos"].value = this._camera.eyePos;
         this._surfaceShader.u["uEyePos"].value = this._camera.eyePos;
+
+        this.updateMVPMatrix();
 
         /* Actual displaying */
         gl.enable(gl.CULL_FACE);
