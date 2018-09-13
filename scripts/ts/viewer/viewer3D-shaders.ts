@@ -84,7 +84,7 @@ vec3 getRefractedColor(const vec3 entryPoint, vec3 refracted)
 
 vec3 getReflectedColor(const vec3 dir)
 {
-    return 0.5 * WATER_COLOR;
+    return vec3(0.5, 0.5, 0.8);
 }
 
 vec4 getSpecular(const vec3 reflected)
