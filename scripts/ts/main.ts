@@ -33,6 +33,10 @@ function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
 function addEventToResizeButton(): void {
     const canvasContainer = document.getElementById("canvas-container") as HTMLElement;
     const resizeButton = document.getElementById("resize-button") as HTMLElement;
+
+    if (canvasContainer === null || resizeButton === null)
+        return;
+    
     resizeButton.addEventListener("click", function() {
         canvasContainer.classList.toggle("fullscreen");
 
@@ -43,9 +47,20 @@ function addEventToResizeButton(): void {
             document.body.style.overflow = "auto";
         }
     });
+
+    window.addEventListener("keypress", function(e: any) {
+        console.log("ozgnzo");
+        console.log(e.keyCode);
+        if (e.keyCode == 27) {
+            canvasContainer.classList.toggle("fullscreen");
+        }
+    }, false);
 }
 
-addEventToResizeButton();
+window.addEventListener("load", function() {
+    console.log("nodsfnog");
+    addEventToResizeButton();
+}, false);
 
 function main() {
     const canvas: HTMLCanvasElement = document.getElementById("glcanvas") as HTMLCanvasElement;
