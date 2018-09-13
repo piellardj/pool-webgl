@@ -40,22 +40,27 @@
 
     #resize-button {
       position:absolute;
-      top:2px;
-      right:2px;
+      top:0;
+      right:0;
       z-index: 10000;
       width: 32px;
       height:32px;
-      background-image: url('/rc/upsize.svg');
-    }
-
-    #canvas-container.fullscreen > #resize-button {
-      background-image: url('/rc/downsize.svg');
+      background-image: url('/rc/resize.svg');
+      background-size: 200%;
     }
 
     #resize-button:hover {
       cursor: pointer;
+      background-position: 100% 0;
     }
 
+    #canvas-container.fullscreen #resize-button {
+        background-position: 0 100%;
+    }
+
+    #canvas-container.fullscreen #resize-button:hover {
+        background-position: 100% 100%;
+    }
   </style>
 
   <title>Pool</title>
