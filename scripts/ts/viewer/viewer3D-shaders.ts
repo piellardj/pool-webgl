@@ -198,6 +198,7 @@ void main(void) {
 
     vPosition.xy = aSampleCoords - .5;
     vPosition.z = uWaterLevel + dH * height;
+    vPosition.z -= 0.001; //slight shift to avoid artifacts at surface-sides jointure
 
     vNormal = decodeNormal(texture2D(uNormals, aSampleCoords), uAmplitude);
     
