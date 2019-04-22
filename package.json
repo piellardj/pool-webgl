@@ -1,25 +1,26 @@
 {
   "name": "pool-webgl",
-  "version": "1.0.0",
-  "description": "Water simulation running on GPU",
+  "version": "2.0.0",
+  "homepage": "https://piellardj.github.io/pool-webgl",
+  "description": "Water ripples simulation running on GPU",
   "main": "main.js",
   "scripts": {
-    "ts-transpile": "tsc --project tsconfig.json",
-    "ts-watch": "tsc --watch --project tsconfig.json",
-    "js-build": "webpack --config webpack.config.js",
-    "js-watch": "webpack --watch --config webpack.config.js",
-    "watch-all": "npm run ts-watch & npm run js-watch",
-    "build-all": "npm run clean; npm run ts-transpile; npm run js-build",
-    "clean": "cp -t scripts scripts/js/ui-min.js scripts/js/gl-matrix-2.5.1-min.js ; rm -rf scripts/js/* tmp/; mv -t scripts/js/ scripts/ui-min.js scripts/gl-matrix-2.5.1-min.js"
+    "build-page": "node src/generate-page.js",
+    "build": "npm run build-page && npm run webpack",
+    "clean": "shx rm -rf docs/*",
+    "rebuild": "npm run clean && npm run build",
+    "webpack": "webpack --config src/config/webpack.config.js --mode=development --output docs/script/main.js"
   },
-  "keywords": [],
-  "author": "Jérémie Piellard",
+  "author": "Jérémie PIELLARD <jeremie.piellard@gmail.com> (https://github.com/piellardj)",
+  "repository": "github:piellardj/pool-webgl",
   "license": "ISC",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "typescript": "^2.6.2",
-    "webpack": "^3.10.0"
+    "fs-extra": "^7.0.1",
+    "shx": "^0.3.2",
+    "ts-loader": "^5.4.3",
+    "typescript": "^3.4.4",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpage-templates": "github:piellardj/webpage-templates"
   }
 }

@@ -1,0 +1,160 @@
+{
+    "title": "Pool",
+    "description": "Water ripples simulation running on GPU",
+    "introduction": [
+        "This project is a WebGL simulation running entirely on GPU. The water surface is modelled as a grid of springs. In 3D mode you can move the camera with the mouse and zoom in or out with ctrl + mouse wheel. In 2D mode you can interact with the water using the left mouse button."
+    ],
+    "githubProjectName": "pool-webgl",
+    "additionalLinks": [],
+    "scriptFiles": [
+        "script/gl-matrix-2.5.1-min.js",
+        "script/main.js"
+    ],
+    "indicators": [
+        {
+            "id": "fps",
+            "label": "FPS"
+        }
+    ],
+    "canvas": {
+        "width": 512,
+        "height": 512,
+        "enableFullscreen": true
+    },
+    "controlsSections": [
+        {
+            "title": "Simulation",
+            "controls": [
+                {
+                    "title": "Quality",
+                    "type": "tabs",
+                    "id": "quality",
+                    "unique": true,
+                    "options": [
+                        {
+                            "value": "128",
+                            "label": "128",
+                            "checked": true
+                        },
+                        {
+                            "value": "256",
+                            "label": "256"
+                        },
+                        {
+                            "value": "512",
+                            "label": "512"
+                        }
+                    ]
+                },
+                {
+                    "title": "Rain",
+                    "type": "checkbox",
+                    "id": "rain-checkbox-id",
+                    "checked": true
+                },
+                {
+                    "title": "Surface tension",
+                    "type": "range",
+                    "id": "surface-tension-range-id",
+                    "min": 0,
+                    "max": 30,
+                    "value": 20,
+                    "step": 0.1
+                },
+                {
+                    "title": "Spring stiffness",
+                    "type": "range",
+                    "id": "stiffness-range-id",
+                    "min": 0,
+                    "max": 1,
+                    "value": 0.15,
+                    "step": 0.01
+                },
+                {
+                    "title": "Dispersion",
+                    "type": "range",
+                    "id": "dispersion-range-id",
+                    "min": 0.9,
+                    "max": 1,
+                    "value": 0.996,
+                    "step": 0.001
+                }
+            ]
+        },
+        {
+            "title": "Rendering",
+            "controls": [
+                {
+                    "title": "Viewer",
+                    "type": "tabs",
+                    "id": "viewer",
+                    "unique": true,
+                    "options": [
+                        {
+                            "value": "2D",
+                            "label": "2D"
+                        },
+                        {
+                            "value": "3D",
+                            "label": "3D",
+                            "checked": true
+                        }
+                    ]
+                },
+                {
+                    "title": "Specular",
+                    "type": "checkbox",
+                    "id": "specular-checkbox-id",
+                    "checked": true
+                },
+                {
+                    "title": "Caustics",
+                    "type": "checkbox",
+                    "id": "caustics-checkbox-id"
+                },
+                {
+                    "title": "Fresnel",
+                    "type": "checkbox",
+                    "id": "fresnel-checkbox-id",
+                    "checked": true
+                },
+                {
+                    "title": "Amplitude",
+                    "type": "range",
+                    "id": "amplitude-range-id",
+                    "min": 0,
+                    "max": 0.06,
+                    "value": 0.03,
+                    "step": 0.001
+                },
+                {
+                    "title": "Water level",
+                    "type": "range",
+                    "id": "level-range-id",
+                    "min": 0.03,
+                    "max": 5,
+                    "value": 0.7,
+                    "step": 0.01
+                },
+                {
+                    "title": "Opacity",
+                    "type": "range",
+                    "id": "opacity-range-id",
+                    "min": 0,
+                    "max": 1.5,
+                    "value": 0.4,
+                    "step": 0.01
+                },
+                {
+                    "title": "Refraction",
+                    "type": "range",
+                    "id": "refraction-range-id",
+                    "min": 0.5,
+                    "max": 1,
+                    "value": 0.8,
+                    "step": 0.01
+                }
+            ]
+        }
+    ]
+}
