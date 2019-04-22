@@ -701,9 +701,14 @@ function initGL(canvas, flags) {
 }
 function main() {
     var canvas = Canvas.getCanvas();
-    var gl = initGL(canvas, { alpha: false });
+    var gl = initGL(canvas, {});
     if (!gl)
         return;
+    var toggleFullscreen = function (fullscreen) {
+        canvas.parentElement.style.background = fullscreen ? "black" : "none";
+    };
+    Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
+    toggleFullscreen(Canvas.isFullScreen());
     var side = 512;
     var water = new water_1.default(gl, side, side);
     var viewerCommon = new viewerCommon_1.default(gl, 512, "rc/tile.png");

@@ -39,10 +39,16 @@ function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
 
 function main() {
     const canvas: HTMLCanvasElement = Canvas.getCanvas();
-    const gl: WebGLRenderingContext = initGL(canvas, {alpha: false});
+    const gl: WebGLRenderingContext = initGL(canvas, {});
     if (!gl)
         return;
 
+    const toggleFullscreen = (fullscreen: boolean) => {
+        canvas.parentElement.style.background = fullscreen ? "black" : "none";
+    };
+    Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
+    toggleFullscreen(Canvas.isFullScreen());
+    
     const side = 512;
     const water: Water = new Water(gl, side, side);
     const viewerCommon: ViewerCommon = new ViewerCommon(gl, 512, "rc/tile.png");
