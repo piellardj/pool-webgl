@@ -705,7 +705,7 @@ function main() {
     if (!gl)
         return;
     var toggleFullscreen = function (fullscreen) {
-        canvas.parentElement.style.background = fullscreen ? "black" : "none";
+        Canvas.getCanvasContainer().style.background = fullscreen ? "black" : "none";
     };
     Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
     toggleFullscreen(Canvas.isFullScreen());

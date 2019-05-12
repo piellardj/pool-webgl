@@ -396,6 +396,21 @@ const Canvas = (function() {
         }, {passive: false});
     }
 
+    /* Indicators cache */
+    const indicatorSpans = {};
+
+    /**
+     * @param {string} id
+     * @return {HTMLSpanElement}
+     */
+    function getIndicatorSpan(id) {
+        if (!indicatorSpans[id]) {
+            const fullId = id + "-indicator-id";
+            indicatorSpans[id] = getElementBySelector("#" + fullId + " span");
+        }
+        return indicatorSpans[id];
+    }
+
     return Object.freeze({
         Observers: Object.freeze({
             canvasResize: canvasResizeObservers,
@@ -425,6 +440,13 @@ const Canvas = (function() {
         },
 
         /**
+         * @return {Object} Html canvas container node
+         */
+        getCanvasContainer: function() {
+            return canvasContainer;
+        },
+
+        /**
          * @return {number[]}
          */
         getSize: getCanvasSize,
@@ -433,7 +455,8 @@ const Canvas = (function() {
          * @return {number[]}
          */
         getMousePosition: function() {
-            return lastMousePosition;
+            // return copy of array
+            return lastMousePosition.slice();
         },
 
         /**
@@ -456,8 +479,7 @@ const Canvas = (function() {
          * @return {void}
          */
         setIndicatorText: function(id, text) {
-            const fullId = id + "-indicator-id";
-            const indicator = getElementBySelector("#" + fullId + " span");
+            const indicator = getIndicatorSpan(id);
             if (indicator) {
                 indicator.innerText = text;
             }

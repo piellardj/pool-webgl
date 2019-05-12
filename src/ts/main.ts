@@ -44,7 +44,7 @@ function main() {
         return;
 
     const toggleFullscreen = (fullscreen: boolean) => {
-        canvas.parentElement.style.background = fullscreen ? "black" : "none";
+        Canvas.getCanvasContainer().style.background = fullscreen ? "black" : "none";
     };
     Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
     toggleFullscreen(Canvas.isFullScreen());
