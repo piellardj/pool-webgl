@@ -7,18 +7,17 @@ import Viewer3D from "./viewer/viewer3D";
 import ViewerCommon from "./viewer/viewerCommon";
 import * as Controls from "./controls";
 
-declare const Canvas: any;
-declare const Demopage: any;
+import "./page-interface-generated";
 
 /** Initializes a WebGL context */
 function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
     function setError(message: string) {
-        Demopage.setErrorMessage("webgl-support", message);
+        Page.Demopage.setErrorMessage("webgl-support", message);
     }
 
     let gl: WebGLRenderingContext = canvas.getContext("webgl", flags) as WebGLRenderingContext;
     if (!gl) {
-        gl = canvas.getContext("experimental-webgl", flags);
+        gl = canvas.getContext("experimental-webgl", flags) as WebGLRenderingContext;
         if (!gl) {
             setError("Your browser or device does not seem to support WebGL.");
             return null;
@@ -38,16 +37,16 @@ function initGL(canvas: HTMLCanvasElement, flags: any): WebGLRenderingContext {
 }
 
 function main() {
-    const canvas: HTMLCanvasElement = Canvas.getCanvas();
+    const canvas: HTMLCanvasElement = Page.Canvas.getCanvas();
     const gl: WebGLRenderingContext = initGL(canvas, {});
     if (!gl)
         return;
 
     const toggleFullscreen = (fullscreen: boolean) => {
-        Canvas.getCanvasContainer().style.background = fullscreen ? "black" : "none";
+        Page.Canvas.getCanvasContainer().style.background = fullscreen ? "black" : "none";
     };
-    Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
-    toggleFullscreen(Canvas.isFullScreen());
+    Page.Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
+    toggleFullscreen(Page.Canvas.isFullScreen());
     
     const side = 512;
     const water: Water = new Water(gl, side, side);
@@ -65,7 +64,7 @@ function main() {
     /* Update the FPS indicator every second. */
     let instantFPS: number = 0;
     const updateFpsText = function () {
-        Canvas.setIndicatorText("fps", instantFPS.toFixed(0));
+        Page.Canvas.setIndicatorText("fps", instantFPS.toFixed(0));
     };
     setInterval(updateFpsText, 1000);
 

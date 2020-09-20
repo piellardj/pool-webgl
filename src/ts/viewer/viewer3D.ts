@@ -7,7 +7,8 @@ import FBO from "../gl-utils/fbo";
 import * as ShadersBuilder from "./viewer3D-shaders";
 import OrbitalCamera from "../orbitalCamera";
 
-declare const Canvas: any;
+import "../page-interface-generated";
+
 declare const mat4: any;
 declare const vec3: any;
 
@@ -31,10 +32,11 @@ class Viewer3D extends Viewer {
 
     constructor(gl: WebGLRenderingContext, common: ViewerCommon) {
         super(gl);
+        const canvas = gl.canvas as HTMLCanvasElement;
 
         this._pMatrix = mat4.create();
         this._mvpMatrix = mat4.create();
-        mat4.perspective(this._pMatrix, 45, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
+        mat4.perspective(this._pMatrix, 45, canvas.clientWidth / canvas.clientHeight, 0.1, 100.0);
 
         this._camera = new OrbitalCamera([0, 0, this.waterLevel - .5], 1.7);
         this._camera.theta = 0;
@@ -56,7 +58,7 @@ class Viewer3D extends Viewer {
         }
 
         const minPhi = 0.000001, maxPhi = 1.2;
-        Canvas.Observers.mouseDrag.push((dX: number, dY: number) => {
+        Page.Canvas.Observers.mouseDrag.push((dX: number, dY: number) => {
             this._camera.theta -= 0.5 * 2 * 3.14159 * dX;
             this._camera.phi -= 0.5 * 2 * dY;
             this._camera.phi = Math.min(maxPhi, Math.max(minPhi, this._camera.phi));
@@ -64,7 +66,7 @@ class Viewer3D extends Viewer {
         });
 
         const minDist = 1.42, maxDist = 3;
-        Canvas.Observers.mouseWheel.push((delta: number) => {
+        Page.Canvas.Observers.mouseWheel.push((delta: number) => {
             let d = this._camera.distance + 0.2 * delta;
             d = Math.min(maxDist, Math.max(minDist, d));
             this._camera.distance = d;
@@ -73,7 +75,7 @@ class Viewer3D extends Viewer {
     }
 
     private updatePMatrix(): void {
-      const canvas = super.gl().canvas;
+      const canvas = super.gl().canvas as HTMLCanvasElement;
         mat4.perspective(this._pMatrix, 45, canvas.clientWidth / canvas.clientHeight, 0.1, 100.0);
     }
 

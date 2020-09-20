@@ -96,6 +96,8 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.bindRendererChooser = exports.bind = void 0;
+__webpack_require__(/*! ./page-interface-generated */ "./src/ts/page-interface-generated.ts");
 function bindControls(water, viewer2D, viewer3D) {
     {
         var RESOLUTION_CONTROL_ID = "quality";
@@ -103,32 +105,32 @@ function bindControls(water, viewer2D, viewer3D) {
             var size = +resolution[0];
             water.reset(size, size);
         };
-        Tabs.addObserver(RESOLUTION_CONTROL_ID, setResolution);
-        setResolution(Tabs.getValues(RESOLUTION_CONTROL_ID));
+        Page.Tabs.addObserver(RESOLUTION_CONTROL_ID, setResolution);
+        setResolution(Page.Tabs.getValues(RESOLUTION_CONTROL_ID));
     }
     {
         var RAIN_CONTROL_ID = "rain-checkbox-id";
         var updateRain = function (enable) { water.rain = enable; };
-        Checkbox.addObserver(RAIN_CONTROL_ID, updateRain);
-        updateRain(Checkbox.isChecked(RAIN_CONTROL_ID));
+        Page.Checkbox.addObserver(RAIN_CONTROL_ID, updateRain);
+        updateRain(Page.Checkbox.isChecked(RAIN_CONTROL_ID));
     }
     {
         var TENSION_CONTROL_ID = "surface-tension-range-id";
         var updateTension = function (tension) { water.surfaceTension = tension; };
-        Range.addObserver(TENSION_CONTROL_ID, updateTension);
-        updateTension(Range.getValue(TENSION_CONTROL_ID));
+        Page.Range.addObserver(TENSION_CONTROL_ID, updateTension);
+        updateTension(Page.Range.getValue(TENSION_CONTROL_ID));
     }
     {
         var SPRING_CONTROL_ID = "stiffness-range-id";
         var updateSpring = function (stiffness) { water.springStiffness = stiffness; };
-        Range.addObserver(SPRING_CONTROL_ID, updateSpring);
-        updateSpring(Range.getValue(SPRING_CONTROL_ID));
+        Page.Range.addObserver(SPRING_CONTROL_ID, updateSpring);
+        updateSpring(Page.Range.getValue(SPRING_CONTROL_ID));
     }
     {
         var DISPERSION_CONTROL_ID = "dispersion-range-id";
         var updateDispersion = function (dispersion) { water.dispersion = dispersion; };
-        Range.addObserver(DISPERSION_CONTROL_ID, updateDispersion);
-        updateDispersion(Range.getValue(DISPERSION_CONTROL_ID));
+        Page.Range.addObserver(DISPERSION_CONTROL_ID, updateDispersion);
+        updateDispersion(Page.Range.getValue(DISPERSION_CONTROL_ID));
     }
     {
         var SPECULAR_CONTROL_ID = "specular-checkbox-id";
@@ -136,8 +138,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.specular = enable;
             viewer3D.specular = enable;
         };
-        Checkbox.addObserver(SPECULAR_CONTROL_ID, updateSpecular);
-        updateSpecular(Checkbox.isChecked(SPECULAR_CONTROL_ID));
+        Page.Checkbox.addObserver(SPECULAR_CONTROL_ID, updateSpecular);
+        updateSpecular(Page.Checkbox.isChecked(SPECULAR_CONTROL_ID));
     }
     {
         var CAUSTICS_CONTROL_ID = "caustics-checkbox-id";
@@ -145,8 +147,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.caustics = enable;
             viewer3D.caustics = enable;
         };
-        Checkbox.addObserver(CAUSTICS_CONTROL_ID, updateCaustics);
-        updateCaustics(Checkbox.isChecked(CAUSTICS_CONTROL_ID));
+        Page.Checkbox.addObserver(CAUSTICS_CONTROL_ID, updateCaustics);
+        updateCaustics(Page.Checkbox.isChecked(CAUSTICS_CONTROL_ID));
     }
     {
         var FRESNEL_CONTROL_ID = "fresnel-checkbox-id";
@@ -154,8 +156,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.fresnel = enable;
             viewer3D.fresnel = enable;
         };
-        Checkbox.addObserver(FRESNEL_CONTROL_ID, updateSpecular);
-        updateSpecular(Checkbox.isChecked(FRESNEL_CONTROL_ID));
+        Page.Checkbox.addObserver(FRESNEL_CONTROL_ID, updateSpecular);
+        updateSpecular(Page.Checkbox.isChecked(FRESNEL_CONTROL_ID));
     }
     {
         var AMPLITUDE_CONTROL_ID = "amplitude-range-id";
@@ -163,8 +165,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.amplitude = amplitude;
             viewer3D.amplitude = amplitude;
         };
-        Range.addObserver(AMPLITUDE_CONTROL_ID, updateAmplitude);
-        updateAmplitude(Range.getValue(AMPLITUDE_CONTROL_ID));
+        Page.Range.addObserver(AMPLITUDE_CONTROL_ID, updateAmplitude);
+        updateAmplitude(Page.Range.getValue(AMPLITUDE_CONTROL_ID));
     }
     {
         var LEVEL_CONTROL_ID = "level-range-id";
@@ -172,8 +174,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.waterLevel = level;
             viewer3D.waterLevel = level;
         };
-        Range.addObserver(LEVEL_CONTROL_ID, updateWaterLevel);
-        updateWaterLevel(Range.getValue(LEVEL_CONTROL_ID));
+        Page.Range.addObserver(LEVEL_CONTROL_ID, updateWaterLevel);
+        updateWaterLevel(Page.Range.getValue(LEVEL_CONTROL_ID));
     }
     {
         var OPACITY_CONTROL_ID = "opacity-range-id";
@@ -181,8 +183,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.opacity = opacity;
             viewer3D.opacity = opacity;
         };
-        Range.addObserver(OPACITY_CONTROL_ID, updateOpacity);
-        updateOpacity(Range.getValue(OPACITY_CONTROL_ID));
+        Page.Range.addObserver(OPACITY_CONTROL_ID, updateOpacity);
+        updateOpacity(Page.Range.getValue(OPACITY_CONTROL_ID));
     }
     {
         var ETA_CONTROL_ID = "refraction-range-id";
@@ -190,8 +192,8 @@ function bindControls(water, viewer2D, viewer3D) {
             viewer2D.eta = eta;
             viewer3D.eta = eta;
         };
-        Range.addObserver(ETA_CONTROL_ID, updateEta);
-        updateEta(Range.getValue(ETA_CONTROL_ID));
+        Page.Range.addObserver(ETA_CONTROL_ID, updateEta);
+        updateEta(Page.Range.getValue(ETA_CONTROL_ID));
     }
 }
 function bind(water, viewer2D, viewer3D) {
@@ -208,8 +210,8 @@ function bindRendererChooser(choose2D, choose3D) {
         }
     }
     var VIEWER_CONTROL_ID = "viewer";
-    Tabs.addObserver(VIEWER_CONTROL_ID, bindViewer);
-    bindViewer(Tabs.getValues(VIEWER_CONTROL_ID));
+    Page.Tabs.addObserver(VIEWER_CONTROL_ID, bindViewer);
+    bindViewer(Page.Tabs.getValues(VIEWER_CONTROL_ID));
 }
 exports.bindRendererChooser = bindRendererChooser;
 
@@ -229,7 +231,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -323,7 +325,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -547,14 +549,16 @@ exports.default = ShaderProgram;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.resizeCanvas = void 0;
 function resizeCanvas(gl, hidpi) {
     if (hidpi === void 0) { hidpi = false; }
     var cssPixel = (hidpi) ? window.devicePixelRatio : 1;
-    var width = Math.floor(gl.canvas.clientWidth * cssPixel);
-    var height = Math.floor(gl.canvas.clientHeight * cssPixel);
-    if (gl.canvas.width != width || gl.canvas.height != height) {
-        gl.canvas.width = width;
-        gl.canvas.height = height;
+    var canvas = gl.canvas;
+    var width = Math.floor(canvas.clientWidth * cssPixel);
+    var height = Math.floor(canvas.clientHeight * cssPixel);
+    if (canvas.width != width || canvas.height != height) {
+        canvas.width = width;
+        canvas.height = height;
     }
 }
 exports.resizeCanvas = resizeCanvas;
@@ -575,7 +579,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -660,11 +664,23 @@ exports.default = Viewport;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -678,9 +694,10 @@ var viewer2D_1 = __importDefault(__webpack_require__(/*! ./viewer/viewer2D */ ".
 var viewer3D_1 = __importDefault(__webpack_require__(/*! ./viewer/viewer3D */ "./src/ts/viewer/viewer3D.ts"));
 var viewerCommon_1 = __importDefault(__webpack_require__(/*! ./viewer/viewerCommon */ "./src/ts/viewer/viewerCommon.ts"));
 var Controls = __importStar(__webpack_require__(/*! ./controls */ "./src/ts/controls.ts"));
+__webpack_require__(/*! ./page-interface-generated */ "./src/ts/page-interface-generated.ts");
 function initGL(canvas, flags) {
     function setError(message) {
-        Demopage.setErrorMessage("webgl-support", message);
+        Page.Demopage.setErrorMessage("webgl-support", message);
     }
     var gl = canvas.getContext("webgl", flags);
     if (!gl) {
@@ -700,15 +717,15 @@ function initGL(canvas, flags) {
     return gl;
 }
 function main() {
-    var canvas = Canvas.getCanvas();
+    var canvas = Page.Canvas.getCanvas();
     var gl = initGL(canvas, {});
     if (!gl)
         return;
     var toggleFullscreen = function (fullscreen) {
-        Canvas.getCanvasContainer().style.background = fullscreen ? "black" : "none";
+        Page.Canvas.getCanvasContainer().style.background = fullscreen ? "black" : "none";
     };
-    Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
-    toggleFullscreen(Canvas.isFullScreen());
+    Page.Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
+    toggleFullscreen(Page.Canvas.isFullScreen());
     var side = 512;
     var water = new water_1.default(gl, side, side);
     var viewerCommon = new viewerCommon_1.default(gl, 512, "rc/tile.png");
@@ -719,7 +736,7 @@ function main() {
     Controls.bindRendererChooser(function () { viewer = viewer2D; }, function () { viewer = viewer3D; });
     var instantFPS = 0;
     var updateFpsText = function () {
-        Canvas.setIndicatorText("fps", instantFPS.toFixed(0));
+        Page.Canvas.setIndicatorText("fps", instantFPS.toFixed(0));
     };
     setInterval(updateFpsText, 1000);
     var lastUpdate = 0;
@@ -774,7 +791,7 @@ var OrbitalCamera = (function () {
             this._focus = newFocus;
             this.recompute();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(OrbitalCamera.prototype, "distance", {
@@ -785,7 +802,7 @@ var OrbitalCamera = (function () {
             this._distance = newDistance;
             this.recompute();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(OrbitalCamera.prototype, "theta", {
@@ -796,7 +813,7 @@ var OrbitalCamera = (function () {
             this._theta = newTheta;
             this.recompute();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(OrbitalCamera.prototype, "phi", {
@@ -807,21 +824,21 @@ var OrbitalCamera = (function () {
             this._phi = newPhi;
             this.recompute();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(OrbitalCamera.prototype, "eyePos", {
         get: function () {
             return this._eyePos;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(OrbitalCamera.prototype, "viewMatrix", {
         get: function () {
             return this._viewMatrix;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     OrbitalCamera.prototype.recompute = function () {
@@ -839,6 +856,19 @@ exports.default = OrbitalCamera;
 
 /***/ }),
 
+/***/ "./src/ts/page-interface-generated.ts":
+/*!********************************************!*\
+  !*** ./src/ts/page-interface-generated.ts ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+
+/***/ }),
+
 /***/ "./src/ts/viewer/caustics-shaders.ts":
 /*!*******************************************!*\
   !*** ./src/ts/viewer/caustics-shaders.ts ***!
@@ -852,6 +882,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildCausticsShader = void 0;
 var shader_1 = __importDefault(__webpack_require__(/*! ../gl-utils/shader */ "./src/ts/gl-utils/shader.ts"));
 var water_shaders_1 = __webpack_require__(/*! ../water-shaders */ "./src/ts/water-shaders.ts");
 var causticsVert = "attribute vec2 aVert;\n\nuniform sampler2D uWater;\nuniform sampler2D uNormals;\n\nuniform float uAmplitude;\nuniform float uWaterLevel;\nuniform float uEta;\n\nvarying vec2 sourceCoords;\nvarying vec2 refractedCoords;\n\n___ENCODE_DECODE___\n\nvoid main(void) {\n    float height = decodeHeight(texture2D(uWater, aVert));\n    height = uWaterLevel + 0.5 * uAmplitude * height;\n    vec3 normal = decodeNormal(texture2D(uNormals, aVert), uAmplitude);\n\n    const vec3 fromLight = vec3(0, 0, -1);\n    vec3 refracted = refract(fromLight, normal, uEta);\n    vec3 toGround = height * refracted / refracted.z;\n\n    vec2 groundCoords = aVert + toGround.xy;\n\n    sourceCoords = aVert;\n    refractedCoords = groundCoords;\n\n    gl_Position = vec4(2.0*groundCoords - 1.0, 0.0, 1.0);\n}";
@@ -880,7 +911,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -889,15 +920,27 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var gl_resource_1 = __importDefault(__webpack_require__(/*! ../gl-utils/gl-resource */ "./src/ts/gl-utils/gl-resource.ts"));
@@ -1022,28 +1065,28 @@ var Caustics = (function (_super) {
         get: function () {
             return this._width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Caustics.prototype, "height", {
         get: function () {
             return this._height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Caustics.prototype, "texture", {
         get: function () {
             return this._texture;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Caustics.prototype, "supported", {
         get: function () {
             return this._supported;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return Caustics;
@@ -1066,7 +1109,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -1095,7 +1138,7 @@ var Viewer = (function (_super) {
             this._showSpecular = b;
             this.updateSpecular();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Viewer.prototype, "caustics", {
@@ -1106,7 +1149,7 @@ var Viewer = (function (_super) {
             this._showCaustics = b;
             this.updateCaustics();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Viewer.prototype, "fresnel", {
@@ -1117,7 +1160,7 @@ var Viewer = (function (_super) {
             this._useFresnel = b;
             this.updateFresnel();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Viewer.prototype, "amplitude", {
@@ -1128,7 +1171,7 @@ var Viewer = (function (_super) {
             this._amplitude = a;
             this.updateAmplitude();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Viewer.prototype, "waterLevel", {
@@ -1139,7 +1182,7 @@ var Viewer = (function (_super) {
             this._waterLevel = d;
             this.updateWaterLevel();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Viewer.prototype, "opacity", {
@@ -1150,7 +1193,7 @@ var Viewer = (function (_super) {
             this._opacity = o;
             this.updateOpacity();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Viewer.prototype, "eta", {
@@ -1161,7 +1204,7 @@ var Viewer = (function (_super) {
             this._eta = e;
             this.updateEta();
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return Viewer;
@@ -1184,6 +1227,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildDisplayShader = void 0;
 var shader_1 = __importDefault(__webpack_require__(/*! ../gl-utils/shader */ "./src/ts/gl-utils/shader.ts"));
 var vbo_1 = __importDefault(__webpack_require__(/*! ../gl-utils/vbo */ "./src/ts/gl-utils/vbo.ts"));
 var water_shaders_1 = __webpack_require__(/*! ../water-shaders */ "./src/ts/water-shaders.ts");
@@ -1214,7 +1258,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -1223,15 +1267,27 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var viewer_1 = __importDefault(__webpack_require__(/*! ./viewer */ "./src/ts/viewer/viewer.ts"));
@@ -1324,6 +1380,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildSurfaceShader = exports.buildSidesShader = void 0;
 var shader_1 = __importDefault(__webpack_require__(/*! ../gl-utils/shader */ "./src/ts/gl-utils/shader.ts"));
 var water_shaders_1 = __webpack_require__(/*! ../water-shaders */ "./src/ts/water-shaders.ts");
 var waterCommonStr = "\nuniform sampler2D uCaustics;\nuniform sampler2D uTileTexture;\n\nuniform vec3 uLightDir; //normalized\n\nuniform float uF0;\nuniform float uEta;\nuniform float uOpacity;\nuniform bool uSpecular;\nuniform bool uShowCaustics;\nuniform bool uFresnel;\n\nconst vec3 WATER_COLOR = vec3(0.0, 0.2, 0.5);\nconst vec3 SPECULAR_COLOR = vec3(1);\nconst float TILE_REPETITION = 4.0;\n\n/* Fresnel factor describes the proportion of refracted and reflected.\n* Arguments expected to be normalized. */\nfloat getFresnelFactor(const vec3 normal, const vec3 fromEye)\n{\n    float computed = mix(pow(1.0 - dot(normal,-fromEye), 5.0), 1.0, uF0);\n    return min(float(uFresnel), computed);\n}\n\nvec3 getTileColor(const vec2 coords)\n{\n    return texture2D(uTileTexture, TILE_REPETITION * coords).rgb;\n}\n\nfloat getCaustics(const vec2 coords)\n{\n    return mix(0.5, texture2D(uCaustics, coords).r, float(uShowCaustics));\n}\n\nvec3 getFloorColor(const vec2 coords)\n{\n    if (any(lessThan(coords, vec2(0))) || any(greaterThan(coords, vec2(1)))) {\n        return vec3(0);\n    }\n\n    return getTileColor(coords) * (0.5 + getCaustics(coords));\n}\n\n/* Floor color mixed with opacity.\n* 'refracted' expected to be normalized. */\nvec3 getRefractedColor(const vec3 entryPoint, vec3 refracted)\n{\n    if (refracted.z >= 0.0) {\n        return WATER_COLOR;\n    }\n\n    refracted *= -entryPoint.z / refracted.z;\n\n    vec2 groundCoords = entryPoint.xy + refracted.xy;\n    vec3 floorColor = getFloorColor(groundCoords + .5);\n\n    /*float f = 1.0;\n\n    if (groundCoords.x < -.5) {\n        f = min(f, abs((-.5 - entryPoint.x) / (groundCoords.x - entryPoint.x)));\n    }\n    if (groundCoords.x > .5) {\n        f = min(f, abs((.5 - entryPoint.x) / (groundCoords.x - entryPoint.x)));\n    }\n    if (groundCoords.y < -.5) {\n        f = min(f, abs((-.5 - entryPoint.y) / (groundCoords.y - entryPoint.y)));\n    }\n    if (groundCoords.y > .5) {\n        f = min(f, abs((.5 - entryPoint.y) / (groundCoords.y - entryPoint.y)));\n    }\n\n    refracted *= f;*/\n\n    float opacity = uOpacity * entryPoint.z;//length(refracted);\n    opacity = clamp(opacity, 0.0, 1.0);\n\n    return mix(floorColor, WATER_COLOR, opacity);\n}\n\nvec3 getReflectedColor(const vec3 dir)\n{\n    return vec3(0.5, 0.5, 0.8);\n}\n\nvec4 getSpecular(const vec3 reflected)\n{\n    float f = max(0.0, dot(-uLightDir, reflected));\n    f = pow(f, 200.0);\n    f *= float(uSpecular);\n\n    return vec4(SPECULAR_COLOR, f);\n}\n\nvec3 computeColor(const vec3 pos, const vec3 fromEye, const vec3 normal)\n{\n    vec3 refracted = refract(fromEye, normal, uEta);\n    vec3 reflected = reflect(fromEye, normal);\n\n    vec3 refractedColor = getRefractedColor(pos, refracted);\n    vec3 reflectedColor = getReflectedColor(reflected);\n\n    float fresnelFactor = getFresnelFactor(fromEye, normal);\n\n    vec3 surfaceColor = mix(refractedColor, reflectedColor, fresnelFactor);\n    vec4 specularColor = getSpecular(reflected);\n\n    return mix(surfaceColor, specularColor.rgb, specularColor.a);\n}";
@@ -1361,7 +1418,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -1370,27 +1427,41 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var viewer_1 = __importDefault(__webpack_require__(/*! ./viewer */ "./src/ts/viewer/viewer.ts"));
 var ShadersBuilder = __importStar(__webpack_require__(/*! ./viewer3D-shaders */ "./src/ts/viewer/viewer3D-shaders.ts"));
 var orbitalCamera_1 = __importDefault(__webpack_require__(/*! ../orbitalCamera */ "./src/ts/orbitalCamera.ts"));
+__webpack_require__(/*! ../page-interface-generated */ "./src/ts/page-interface-generated.ts");
 var Viewer3D = (function (_super) {
     __extends(Viewer3D, _super);
     function Viewer3D(gl, common) {
         var _this = _super.call(this, gl) || this;
+        var canvas = gl.canvas;
         _this._pMatrix = mat4.create();
         _this._mvpMatrix = mat4.create();
-        mat4.perspective(_this._pMatrix, 45, gl.canvas.clientWidth / gl.canvas.clientHeight, 0.1, 100.0);
+        mat4.perspective(_this._pMatrix, 45, canvas.clientWidth / canvas.clientHeight, 0.1, 100.0);
         _this._camera = new orbitalCamera_1.default([0, 0, _this.waterLevel - .5], 1.7);
         _this._camera.theta = 0;
         _this._camera.phi = 0.8;
@@ -1407,14 +1478,14 @@ var Viewer3D = (function (_super) {
             shader.u["uLightDir"].value = _this._lightDirection;
         }
         var minPhi = 0.000001, maxPhi = 1.2;
-        Canvas.Observers.mouseDrag.push(function (dX, dY) {
+        Page.Canvas.Observers.mouseDrag.push(function (dX, dY) {
             _this._camera.theta -= 0.5 * 2 * 3.14159 * dX;
             _this._camera.phi -= 0.5 * 2 * dY;
             _this._camera.phi = Math.min(maxPhi, Math.max(minPhi, _this._camera.phi));
             _this.updateMVPMatrix();
         });
         var minDist = 1.42, maxDist = 3;
-        Canvas.Observers.mouseWheel.push(function (delta) {
+        Page.Canvas.Observers.mouseWheel.push(function (delta) {
             var d = _this._camera.distance + 0.2 * delta;
             d = Math.min(maxDist, Math.max(minDist, d));
             _this._camera.distance = d;
@@ -1655,7 +1726,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -1712,14 +1783,14 @@ var ViewerCommon = (function (_super) {
         get: function () {
             return this._caustics;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ViewerCommon.prototype, "tileTexture", {
         get: function () {
             return this._tileTexture;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return ViewerCommon;
@@ -1742,6 +1813,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildNormalsShader = exports.buildUpdateShader = exports.buildTouchShader = exports.encodeDecodeStr = void 0;
 var shader_1 = __importDefault(__webpack_require__(/*! ./gl-utils/shader */ "./src/ts/gl-utils/shader.ts"));
 var vbo_1 = __importDefault(__webpack_require__(/*! ./gl-utils/vbo */ "./src/ts/gl-utils/vbo.ts"));
 var encodeDecodeStr = "const float HEIGHT_RANGE = 1.0;\nconst float VEL_RANGE = 0.25;\n\nstruct Cell {\n    float h; //height\n    float v; //velocity\n};\n\n/* Decodes a float value (16 bits in [0,1])\n * from a 2D value (2x8bits in [0,1]x[0,1]) */\nfloat decode16bit(vec2 v)\n{\n    const vec2 weights = 255.0 * vec2(256.0, 1.0) / (256.0*256.0 - 1.0);\n    return dot(weights, v);\n}\n\n/* Encodes a float value (16 bits in [0,1])\n * into a 2D value (2x8bits in [0,1]x[0,1]) */\nvec2 encode16bit(float f)\n{\n    const vec2 base = (256.0*256.0 - 1.0) / vec2(256.0, 1.0);\n    return floor(mod(f * base, 256.0)) / 255.0;\n}\n\nfloat decode(vec2 v, float range)\n{\n    return (2.0 * decode16bit(v) - 1.0) * range;\n}\n\nvec2 encode(float value, float range)\n{\n    return encode16bit(0.5 * value / range + 0.5);\n}\n\nfloat decodeHeight(vec4 texel)\n{\n    return decode(texel.rg, HEIGHT_RANGE);\n}\nvec2 encodeHeight(float h)\n{\n    return encode(h, HEIGHT_RANGE);\n}\n\nvec3 decodeNormal(vec4 texel, float amplitude)\n{\n    vec3 result = 2.0 * texel.rgb - 1.0;\n    return normalize(result * vec3(amplitude, amplitude, 1));\n}\nvec4 encodeNormal(vec3 n)\n{\n    return vec4(0.5 * n + 0.5, 1);\n}\n\nfloat decodeVelocity(vec4 texel)\n{\n    return decode(texel.ba, VEL_RANGE);\n}\nvec2 encodeVelocity(float h)\n{\n    return encode(h, VEL_RANGE);\n}\n\nCell decodeCell(vec4 texel)\n{\n    return Cell(decodeHeight(texel), decodeVelocity(texel));\n}\nvec4 encodeCell(Cell cell)\n{\n    return vec4(encodeHeight(cell.h), encodeVelocity(cell.v));\n}";
@@ -1791,7 +1863,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -1800,15 +1872,27 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var gl_resource_1 = __importDefault(__webpack_require__(/*! ./gl-utils/gl-resource */ "./src/ts/gl-utils/gl-resource.ts"));
@@ -1897,14 +1981,14 @@ var Water = (function (_super) {
         get: function () {
             return this._width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "height", {
         get: function () {
             return this._height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "surfaceTension", {
@@ -1915,7 +1999,7 @@ var Water = (function (_super) {
             this._surfaceTension = c;
             this._updateShader.u["uC"].value = c;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "springStiffness", {
@@ -1926,7 +2010,7 @@ var Water = (function (_super) {
             this._springStiffness = k;
             this._updateShader.u["uK"].value = k;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "dispersion", {
@@ -1937,35 +2021,35 @@ var Water = (function (_super) {
             this._dispersion = f;
             this._updateShader.u["uF"].value = f;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "heightmap", {
         get: function () {
             return this._heightmapsTex[this._currIndex];
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "normalmap", {
         get: function () {
             return this._normalsTex;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "currHeightmap", {
         get: function () {
             return this._heightmapsTex[this._currIndex];
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Water.prototype, "nextHeightmap", {
         get: function () {
             return this._heightmapsTex[(this._currIndex + 1) % 2];
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Water.prototype.switchHeightmaps = function () {
