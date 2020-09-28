@@ -3,7 +3,7 @@ const path = require("path");
 const PROJECT_DIR = path.resolve(__dirname, "..", "..");
 
 module.exports = {
-    devtool: "none",
+    devtool: "source-map",
     entry: path.join(PROJECT_DIR, "src", "ts", "main.ts"),
     resolve: {
         extensions: [".ts"]
