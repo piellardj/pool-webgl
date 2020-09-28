@@ -1294,6 +1294,7 @@ var viewer_1 = __importDefault(__webpack_require__(/*! ./viewer */ "./src/ts/vie
 var fbo_1 = __importDefault(__webpack_require__(/*! ../gl-utils/fbo */ "./src/ts/gl-utils/fbo.ts"));
 var viewport_1 = __importDefault(__webpack_require__(/*! ../gl-utils/viewport */ "./src/ts/gl-utils/viewport.ts"));
 var ShadersBuilder = __importStar(__webpack_require__(/*! ./viewer2D-shaders */ "./src/ts/viewer/viewer2D-shaders.ts"));
+__webpack_require__(/*! ../page-interface-generated */ "./src/ts/page-interface-generated.ts");
 var Viewer2D = (function (_super) {
     __extends(Viewer2D, _super);
     function Viewer2D(gl, common) {
@@ -1329,9 +1330,9 @@ var Viewer2D = (function (_super) {
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
     Viewer2D.prototype.interact = function (water) {
-        if (Canvas.isMouseDown()) {
-            var canvasSize = Canvas.getSize();
-            var p = Canvas.getMousePosition();
+        if (Page.Canvas.isMouseDown()) {
+            var canvasSize = Page.Canvas.getSize();
+            var p = Page.Canvas.getMousePosition();
             p[0] *= canvasSize[0];
             p[1] = (1 - p[1]) * canvasSize[1];
             this.updateViewport();

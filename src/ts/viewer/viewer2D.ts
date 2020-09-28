@@ -7,7 +7,7 @@ import FBO from "../gl-utils/fbo";
 import Viewport from "../gl-utils/viewport";
 import * as ShadersBuilder from "./viewer2D-shaders";
 
-declare const Canvas: any;
+import "../page-interface-generated";
 
 class Viewer2D extends Viewer {
     private _displayShader: Shader;
@@ -59,9 +59,9 @@ class Viewer2D extends Viewer {
     }
 
     public interact(water: Water): void {
-        if (Canvas.isMouseDown()) {
-            const canvasSize = Canvas.getSize();
-            const p = Canvas.getMousePosition(); // normalized
+        if (Page.Canvas.isMouseDown()) {
+            const canvasSize = Page.Canvas.getSize();
+            const p = Page.Canvas.getMousePosition(); // normalized
             p[0] *= canvasSize[0]; //in pixels
             p[1] = (1 - p[1]) * canvasSize[1]; //in pixels
 
