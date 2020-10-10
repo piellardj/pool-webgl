@@ -13,7 +13,7 @@ const data = {
     additionalLinks: [],
     scriptFiles: [
         "script/gl-matrix-2.5.1-min.js",
-        "script/main.js"
+        "script/main.min.js"
     ],
     indicators: [
         {
