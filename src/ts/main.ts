@@ -47,7 +47,7 @@ function main() {
     };
     Page.Canvas.Observers.fullscreenToggle.push(toggleFullscreen);
     toggleFullscreen(Page.Canvas.isFullScreen());
-    
+
     const side = 512;
     const water: Water = new Water(gl, side, side);
     const viewerCommon: ViewerCommon = new ViewerCommon(gl, 512, "rc/tile.png");
@@ -68,19 +68,23 @@ function main() {
     };
     setInterval(updateFpsText, 1000);
 
+    const MAX_FPS = 60;
+    const MIN_TIMESTEP = 1 / MAX_FPS;
     let lastUpdate = 0;
     function mainLoop(time) {
         time *= 0.001; //dt is now in seconds
         let dt = time - lastUpdate;
-        instantFPS = 1 / dt;
-        lastUpdate = time;
+        if (dt > MIN_TIMESTEP) { // don't update too often or the sim will look fast-forwarded
+            instantFPS = 1 / dt;
+            lastUpdate = time;
 
-        /* Updating */
-        viewer.interact(water);
-        water.update(1 / 60);
+            /* Updating */
+            viewer.interact(water);
+            water.update(1 / 60); // fixed timestep, independant from FPS to avoid float precision issues
+        }
 
         Utils.resizeCanvas(gl, false);
-        
+
         /* Drawing */
         if (viewer.caustics) {
             viewerCommon.caustics.compute(water, viewer.amplitude, viewer.waterLevel, viewer.eta);
