@@ -70,13 +70,15 @@ function main() {
 
     const MAX_FPS = 60;
     const MIN_TIMESTEP = 1 / MAX_FPS;
-    let lastUpdate = 0;
+    let lastUpdateTime = 0;
+    let lastFrameTime = 0;
     function mainLoop(time) {
         time *= 0.001; //dt is now in seconds
-        let dt = time - lastUpdate;
-        if (dt > MIN_TIMESTEP) { // don't update too often or the sim will look fast-forwarded
-            instantFPS = 1 / dt;
-            lastUpdate = time;
+        instantFPS = 1 / (time - lastFrameTime);
+        lastFrameTime = time;
+
+        if (time - lastUpdateTime > MIN_TIMESTEP) { // don't update too often or the sim will look fast-forwarded
+            lastUpdateTime = time;
 
             /* Updating */
             viewer.interact(water);
