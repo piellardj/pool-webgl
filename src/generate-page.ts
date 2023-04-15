@@ -10,6 +10,10 @@ const data = {
         "This project is a WebGL simulation running entirely on GPU. The water surface is modelled as a grid of springs. In 3D mode you can move the camera with the mouse and zoom in or out with ctrl + mouse wheel. In 2D mode you can interact with the water using the left mouse button."
     ],
     githubProjectName: "pool-webgl",
+    readme: {
+        filepath: path.join(__dirname, "..", "README.md"),
+        branchName: "master"
+    },
     additionalLinks: [],
     scriptFiles: [
         "script/gl-matrix-2.5.1-min.js",
